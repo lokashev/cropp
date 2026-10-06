@@ -3,22 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <!-- Apple iOS Safari PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CineFrame">
   <meta name="theme-color" content="#07080c">
+  <meta name="application-name" content="CineFrame Studio">
   <meta name="format-detection" content="telephone=no">
-  <title>CineFrame Studio — Кинокадр & Цветокоррекция</title>
+  <meta name="description" content="Профессиональное PWA-приложение для кадрирования фото в киноформатах с цветокоррекцией и оффлайн-работой">
 
-  <!-- PWA Manifest Data URI -->
-  <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiQ2luZUZyYW1lIFN0dWRpbyIsInNob3J0X25hbWUiOiJDaW5lRnJhbWUiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzA3MDgwYyIsInRoZW1lX2NvbG9yIjoiIzA3MDgwYyJ9">
+  <title>CineFrame Studio — Кинокадр PWA</title>
 
-  <!-- Apple Touch Icon (Cinema Clapper SVG Data URI) -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%2307080c'/%3E%3Crect x='70' y='140' width='372' height='260' rx='28' fill='%23131722' stroke='%23f59e0b' stroke-width='16'/%3E%3Cpath d='M70 215h372M160 140l-45 75M260 140l-45 75M360 140l-45 75' stroke='%23f59e0b' stroke-width='14' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='320' r='50' fill='none' stroke='%2306b6d4' stroke-width='14'/%3E%3Ccircle cx='256' cy='320' r='18' fill='%23f59e0b'/%3E%3C/svg%3E">
+  <!-- PWA Web App Manifest (Data URI with 192x192 & 512x512 SVG icons) -->
+  <link rel="manifest" id="manifestLink" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22CineFrame%20Studio%20%E2%80%94%20%D0%9A%D0%B8%D0%BD%D0%BE%D0%BA%D0%B0%D0%B4%D1%80%22%2C%22short_name%22%3A%22CineFrame%22%2C%22description%22%3A%22%D0%9A%D0%B8%D0%BD%D0%B5%D0%BC%D0%B0%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5%20%D0%BA%D0%B0%D0%B4%D1%80%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D1%84%D0%BE%D1%82%D0%BE%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22any%22%2C%22background_color%22%3A%22%2307080c%22%2C%22theme_color%22%3A%22%2307080c%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%253E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'128'%20fill%3D'%2307080c'%2F%253E%253Crect%20x%3D'70'%20y%3D'140'%20width%3D'372'%20height%3D'260'%20rx%3D'28'%20fill%3D'%23131722'%20stroke%3D'%23f59e0b'%20stroke-width%3D'16'%2F%253E%253Cpath%20d%3D'M70%20215h372M160%20140l-45%2075M260%20140l-45%2075M360%20140l-45%2075'%20stroke%3D'%23f59e0b'%20stroke-width%3D'14'%20stroke-linecap%3D'round'%2F%253E%253Ccircle%20cx%3D'256'%20cy%3D'320'%20r%3D'52'%20fill%3D'none'%20stroke%3D'%2306b6d4'%20stroke-width%3D'14'%2F%253E%253Ccircle%20cx%3D'256'%20cy%3D'320'%20r%3D'18'%20fill%3D'%23f59e0b'%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%253E%253Crect%20width%3D'512'%20height%3D'512'%20rx%3D'128'%20fill%3D'%2307080c'%2F%253E%253Crect%20x%3D'70'%20y%3D'140'%20width%3D'372'%20height%3D'260'%20rx%3D'28'%20fill%3D'%23131722'%20stroke%3D'%23f59e0b'%20stroke-width%3D'16'%2F%253E%253Cpath%20d%3D'M70%20215h372M160%20140l-45%2075M260%20140l-45%2075M360%20140l-45%2075'%20stroke%3D'%23f59e0b'%20stroke-width%3D'14'%20stroke-linecap%3D'round'%2F%253E%253Ccircle%20cx%3D'256'%20cy%3D'320'%20r%3D'52'%20fill%3D'none'%20stroke%3D'%2306b6d4'%20stroke-width%3D'14'%2F%253E%253Ccircle%20cx%3D'256'%20cy%3D'320'%20r%3D'18'%20fill%3D'%23f59e0b'%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
-  <!-- Tailwind CSS CDN -->
+  <!-- Apple Touch Icon (Cinema Director Slate & Lens SVG) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%2307080c'/%3E%3Crect x='70' y='140' width='372' height='260' rx='28' fill='%23131722' stroke='%23f59e0b' stroke-width='16'/%3E%3Cpath d='M70 215h372M160 140l-45 75M260 140l-45 75M360 140l-45 75' stroke='%23f59e0b' stroke-width='14' stroke-linecap='round'/%3E%3Ccircle cx='256' cy='320' r='52' fill='none' stroke='%2306b6d4' stroke-width='14'/%3E%3Ccircle cx='256' cy='320' r='18' fill='%23f59e0b'/%3E%3C/svg%3E">
+
+  <!-- External Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -31,25 +35,27 @@
           colors: {
             cinema: {
               950: '#07080c',
-              900: '#0c0e15',
-              850: '#121520',
-              800: '#181c2b',
-              750: '#202538',
-              700: '#2b324a',
-              600: '#3d4666',
+              900: '#0d1017',
+              850: '#141824',
+              800: '#1a2030',
+              750: '#232b40',
+              700: '#2d3752',
+              600: '#435178',
               amber: '#f59e0b',
               gold: '#fbbf24',
               cyan: '#06b6d4',
-              red: '#ef4444'
+              red: '#ef4444',
+              emerald: '#10b981'
             }
           },
           fontFamily: {
-            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'SFMono-Regular', 'Menlo', 'monospace']
           },
           boxShadow: {
             'glow-amber': '0 0 25px -4px rgba(245, 158, 11, 0.45)',
             'glow-cyan': '0 0 25px -4px rgba(6, 182, 212, 0.45)',
+            'glow-emerald': '0 0 25px -4px rgba(16, 185, 129, 0.45)',
             'sheet': '0 -15px 45px rgba(0, 0, 0, 0.9)'
           }
         }
@@ -68,6 +74,7 @@
     * {
       -webkit-tap-highlight-color: transparent;
       outline: none;
+      box-sizing: border-box;
     }
 
     html, body {
@@ -82,23 +89,23 @@
       background-color: #07080c;
     }
 
-    /* Studio Subtle Grid Pattern */
+    /* Subtle Studio Grid */
     .bg-cinema-grid {
       background-size: 32px 32px;
       background-image:
-        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     }
 
     /* iOS Native Bottom Sheet Spring Animation */
     .sheet-spring {
-      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+      transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
     }
 
     /* Precision Range Sliders */
     input[type="range"] {
       -webkit-appearance: none;
-      background: #1e2335;
+      background: #1a2030;
       border-radius: 9999px;
       height: 6px;
       outline: none;
@@ -115,16 +122,15 @@
       transition: transform 0.12s ease;
     }
     input[type="range"]::-webkit-slider-thumb:active {
-      transform: scale(1.3);
+      transform: scale(1.25);
     }
 
-    /* Hide scrollbars for clean studio panels */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
     @keyframes rec-pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.9); }
+      50% { opacity: 0.35; transform: scale(0.92); }
     }
     .animate-rec {
       animation: rec-pulse 1.8s infinite ease-in-out;
@@ -133,11 +139,11 @@
 </head>
 <body class="h-full w-full flex flex-col font-sans text-gray-200 select-none overflow-hidden relative">
 
-  <header id="mainHeader" class="shrink-0 z-30 bg-cinema-900/90 backdrop-blur-xl border-b border-cinema-750/70 px-3.5 sm:px-5 flex items-center justify-between" style="padding-top: max(var(--sat), 0.5rem); height: calc(3.25rem + var(--sat));">
+  <header id="mainHeader" class="shrink-0 z-30 bg-cinema-900/95 backdrop-blur-xl border-b border-cinema-750/70 px-3 sm:px-5 flex items-center justify-between" style="padding-top: max(var(--sat), 0.5rem); height: calc(3.4rem + var(--sat));">
     
-    <!-- Left: Studio Logo & Aspect Ratio Tag -->
+    <!-- Left: App Brand & PWA Status Tag -->
     <div class="flex items-center space-x-2.5">
-      <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-cinema-950 font-bold shadow-md shadow-amber-500/25">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 flex items-center justify-center text-cinema-950 font-bold shadow-md shadow-amber-500/25 shrink-0">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <rect x="2" y="6" width="20" height="13" rx="2" stroke-width="2"/>
           <path d="M6 6l3-3m5 3l3-3M2 10h20" stroke-width="1.8" stroke-linecap="round"/>
@@ -146,13 +152,16 @@
       <div>
         <div class="flex items-center space-x-1.5">
           <span class="font-extrabold text-xs sm:text-sm tracking-wider uppercase text-white">CINE<span class="text-amber-400">FRAME</span></span>
-          <span id="headerRatioBadge" class="text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-cinema-800 text-amber-300 border border-cinema-700">2.39:1</span>
+          <span id="pwaStatusBadge" class="text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-500/40 flex items-center space-x-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="pwaStatusText">PWA Ready</span>
+          </span>
         </div>
       </div>
     </div>
 
-    <!-- Center: ARRI Monitor REC & Resolution (Desktop & Tablet) -->
-    <div class="hidden md:flex items-center space-x-3 text-xs font-mono bg-cinema-850 px-3.5 py-1 rounded-full border border-cinema-700/70">
+    <!-- Center: ARRI Director REC Indicator & Format Resolution -->
+    <div class="hidden md:flex items-center space-x-3 text-xs font-mono bg-cinema-850 px-3.5 py-1.5 rounded-full border border-cinema-700/70">
       <div class="flex items-center space-x-1.5">
         <span class="w-2 h-2 rounded-full bg-red-500 animate-rec"></span>
         <span class="text-red-400 font-bold tracking-widest text-[11px]">REC</span>
@@ -163,22 +172,34 @@
       <span id="headerResDisplay" class="text-amber-400 font-bold text-[11px]">3840 × 1608</span>
     </div>
 
-    <!-- Right: Open, Demo, Export Actions -->
-    <div class="flex items-center space-x-2">
-      <!-- Demo Scene Button -->
-      <button id="btnSample" title="Тестовый кинокадр" class="px-2.5 py-1.5 rounded-xl bg-cinema-800 hover:bg-cinema-750 text-xs font-medium text-gray-200 border border-cinema-700 transition flex items-center space-x-1.5 active:scale-95">
+    <!-- Right Actions: PWA Install, Photo Open, Demo, Export, PWA Package -->
+    <div class="flex items-center space-x-1.5 sm:space-x-2">
+      <!-- Dynamic PWA Install Button (Android / Chrome / Desktop) -->
+      <button id="btnPwaInstall" class="hidden px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 text-cinema-950 font-bold text-xs transition items-center space-x-1.5 shadow-md shadow-emerald-500/25 active:scale-95 animate-pulse">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <span>Установить</span>
+      </button>
+
+      <!-- iOS PWA Install Guide Button -->
+      <button id="btnIosInstallGuide" title="Установить на iPhone" class="px-2.5 py-1.5 rounded-xl bg-cinema-800 hover:bg-cinema-750 text-xs font-medium text-amber-300 border border-cinema-700 transition flex items-center space-x-1 active:scale-95">
+        <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.72-.86 2.74 1 .08 2.01-.5 2.57-1.24z"/></svg>
+        <span class="hidden sm:inline">PWA</span>
+      </button>
+
+      <!-- Demo Frame Button -->
+      <button id="btnSample" title="Тестовый кинокадр" class="px-2.5 py-1.5 rounded-xl bg-cinema-800 hover:bg-cinema-750 text-xs font-medium text-gray-200 border border-cinema-700 transition flex items-center space-x-1 active:scale-95">
         <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
         <span class="hidden sm:inline">Демо</span>
       </button>
 
-      <!-- File Picker Button -->
-      <label for="imageUpload" class="px-2.5 py-1.5 rounded-xl bg-cinema-800 hover:bg-cinema-750 text-xs font-medium text-gray-200 border border-cinema-700 transition cursor-pointer flex items-center space-x-1.5 active:scale-95">
+      <!-- Upload Photo Button -->
+      <label for="imageUpload" class="px-2.5 py-1.5 rounded-xl bg-cinema-800 hover:bg-cinema-750 text-xs font-medium text-gray-200 border border-cinema-700 transition cursor-pointer flex items-center space-x-1 active:scale-95">
         <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
         <span class="hidden sm:inline">Фото</span>
         <input type="file" id="imageUpload" accept="image/*" class="hidden">
       </label>
 
-      <!-- Export Button -->
+      <!-- Export Image Button -->
       <button id="btnExport" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-cinema-950 font-bold text-xs transition flex items-center space-x-1.5 shadow-md shadow-amber-500/25 active:scale-95">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
         <span>Экспорт</span>
@@ -188,11 +209,11 @@
 
   <main id="canvasViewport" class="flex-1 relative w-full h-full bg-cinema-950 bg-cinema-grid overflow-hidden touch-none select-none">
     
-    <!-- Master HTML5 Canvas: Centered without layout shifts -->
+    <!-- Full-bleed Canvas centered with strict devicePixelRatio matrix -->
     <canvas id="mainCanvas" class="absolute inset-0 block w-full h-full cursor-grab active:cursor-grabbing"></canvas>
 
-    <!-- Canvas Live HUD Chip (Top-Left overlay) -->
-    <div id="liveHud" class="absolute top-3 left-3 pointer-events-none flex flex-col space-y-1 font-mono text-[10px] text-gray-400 bg-cinema-950/80 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-cinema-750/70 z-10 transition-opacity">
+    <!-- Canvas Live HUD Information Overlay -->
+    <div id="liveHud" class="absolute top-3 left-3 pointer-events-none flex flex-col space-y-1 font-mono text-[10px] text-gray-400 bg-cinema-950/85 backdrop-blur-md px-2.5 py-1.5 rounded-xl border border-cinema-750/70 z-10 transition-opacity">
       <div class="flex items-center space-x-2">
         <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-rec"></span>
         <span id="hudRatioTag" class="text-amber-400 font-bold">2.39:1 CinemaScope</span>
@@ -201,10 +222,10 @@
       <div>ZOOM: <span id="hudZoomVal" class="text-cyan-400 font-bold">1.00×</span></div>
     </div>
 
-    <!-- Floating Canvas Tool Pill (Floating above Bottom Dock) -->
+    <!-- Floating Canvas Tool Pill above Bottom Sheet -->
     <div id="canvasPillBar" class="absolute bottom-20 left-1/2 -translate-x-1/2 flex items-center space-x-2 bg-cinema-900/90 backdrop-blur-xl px-3 py-1.5 rounded-full border border-cinema-750 shadow-2xl z-20 transition-all duration-300">
       
-      <!-- Hold for Original Frame Preview -->
+      <!-- Hold for Original Preview -->
       <button id="btnHoldOriginal" class="px-2.5 py-1 rounded-full bg-cinema-800 hover:bg-cinema-750 text-gray-300 text-xs flex items-center space-x-1 transition select-none active:bg-amber-500 active:text-cinema-950">
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
         <span class="text-[11px] font-medium">Оригинал</span>
@@ -225,7 +246,7 @@
       </button>
     </div>
 
-    <!-- Drag-and-Drop Overlay -->
+    <!-- Drag-and-Drop Image Overlay -->
     <div id="dropOverlay" class="absolute inset-4 z-40 rounded-2xl border-2 border-dashed border-amber-400/80 bg-cinema-950/90 backdrop-blur-md hidden flex-col items-center justify-center text-center p-6 pointer-events-none">
       <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center mb-3">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
@@ -236,14 +257,14 @@
 
   </main>
 
-  <div id="bottomSheet" class="sheet-spring fixed bottom-0 inset-x-0 z-30 bg-cinema-900/95 backdrop-blur-2xl border-t border-cinema-750/90 shadow-sheet flex flex-col translate-y-[calc(100%-54px-var(--sab))] max-h-[70vh]" style="padding-bottom: var(--sab);">
+  <div id="bottomSheet" class="sheet-spring fixed bottom-0 inset-x-0 z-30 bg-cinema-900/95 backdrop-blur-2xl border-t border-cinema-750/90 shadow-sheet flex flex-col translate-y-[calc(100%-54px-var(--sab))] max-h-[72vh]" style="padding-bottom: var(--sab);">
     
     <!-- Swipe / Drag Handle Header Area -->
     <div id="sheetHandleArea" class="pt-2 pb-1.5 flex flex-col items-center justify-center cursor-pointer select-none shrink-0">
       <div class="w-10 h-1.5 rounded-full bg-gray-500/60 active:bg-amber-400 transition-colors"></div>
     </div>
 
-    <!-- Quick Navigation Bar (Always visible in collapsed mode) -->
+    <!-- Quick Navigation Bar with PWA Tab -->
     <div class="h-11 px-3 flex items-center justify-between border-b border-cinema-800/80 shrink-0">
       <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar py-0.5">
         <button data-tab="tab-format" class="tab-chip active text-xs px-3 py-1 rounded-full bg-cinema-800 text-amber-400 border border-amber-500/70 font-medium transition flex items-center space-x-1 shrink-0">
@@ -262,14 +283,19 @@
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
           <span>Титры & HUD</span>
         </button>
+        <button data-tab="tab-pwa" class="tab-chip text-xs px-3 py-1 rounded-full bg-cinema-850 text-emerald-400 border border-cinema-750 font-medium transition flex items-center space-x-1 shrink-0">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          <span>PWA Пакет</span>
+        </button>
       </div>
 
-      <!-- Expand / Collapse chevron toggle -->
+      <!-- Expand / Collapse toggle -->
       <button id="btnToggleSheet" class="p-1 rounded-lg bg-cinema-800 text-gray-300 hover:text-white transition shrink-0 ml-1.5" title="Развернуть/Свернуть панель">
         <svg id="iconToggleSheet" class="w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
       </button>
     </div>
 
+    <!-- Scrollable Tab Content Container -->
     <div id="sheetScrollArea" class="flex-1 overflow-y-auto p-4 space-y-5 no-scrollbar">
 
       <!-- TAB 1: ASPECT RATIOS & TRANSFORM -->
@@ -559,7 +585,6 @@
 
       <!-- TAB 4: SUBTITLES & ARRI HUD -->
       <div id="tab-cinema" class="tab-pane hidden space-y-4">
-        <!-- Subtitles -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold uppercase tracking-wider text-gray-400">35mm Киносубтитры</span>
@@ -588,7 +613,6 @@
           </div>
         </div>
 
-        <!-- Camera HUD -->
         <div class="pt-3 border-t border-cinema-800 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-bold uppercase tracking-wider text-gray-400">ARRI / RED Viewfinder HUD</span>
@@ -606,7 +630,6 @@
           </div>
         </div>
 
-        <!-- Export Mode: Pure crop vs Letterbox -->
         <div class="pt-3 border-t border-cinema-800 space-y-2">
           <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block">Тип экспорта рамки</span>
           <div class="space-y-1.5">
@@ -622,19 +645,109 @@
         </div>
       </div>
 
+      <!-- TAB 5: PWA SUITE & OFFLINE PERSISTENCE -->
+      <div id="tab-pwa" class="tab-pane hidden space-y-4">
+        <div class="p-3.5 rounded-xl bg-cinema-850 border border-emerald-500/40 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white flex items-center space-x-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Статус PWA и Автосохранения</span>
+            </span>
+            <span id="pwaDisplayMode" class="text-[10px] font-mono px-2 py-0.5 rounded bg-cinema-800 text-emerald-300 border border-emerald-500/30">Browser Mode</span>
+          </div>
+          <p class="text-[11px] text-gray-300">
+            Приложение сохраняет фото и все параметры в локальное хранилище <strong>IndexedDB</strong>. При перезапуске сессия восстанавливается мгновенно даже без подключения к сети.
+          </p>
+          <div class="flex items-center space-x-2 pt-1 text-xs">
+            <button id="btnClearStorage" class="px-2.5 py-1 rounded-lg bg-cinema-800 hover:bg-red-950/60 text-gray-300 hover:text-red-400 border border-cinema-700 transition">Очистить кэш фото</button>
+            <button id="btnSaveSessionNow" class="px-2.5 py-1 rounded-lg bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/50 transition">Сохранить сессию</button>
+          </div>
+        </div>
+
+        <div class="space-y-2.5 pt-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block">Развертывание на собственный хостинг</span>
+          <p class="text-xs text-gray-400">
+            Вы можете скачать готовый PWA-комплект для размещения на <strong>GitHub Pages, Vercel или Netlify</strong>. В архив входят `manifest.json`, `sw.js` и оптимизированная иконка.
+          </p>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button id="btnDownloadManifest" class="py-2.5 px-3 rounded-xl bg-cinema-850 hover:bg-cinema-800 border border-cinema-700/80 text-xs text-gray-200 flex items-center justify-center space-x-1.5 transition">
+              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <span>manifest.json</span>
+            </button>
+            <button id="btnDownloadSw" class="py-2.5 px-3 rounded-xl bg-cinema-850 hover:bg-cinema-800 border border-cinema-700/80 text-xs text-gray-200 flex items-center justify-center space-x-1.5 transition">
+              <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+              <span>sw.js (Worker)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- Bottom Sheet Footer Status -->
     <div class="p-2.5 bg-cinema-950/90 border-t border-cinema-800/80 flex items-center justify-between text-[11px] text-gray-400 font-mono shrink-0">
       <div class="flex items-center space-x-2">
         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-        <span id="footerInfo">Готов к рендеру</span>
+        <span id="footerInfo">PWA Offline Active</span>
       </div>
       <button id="btnMasterReset" class="text-gray-400 hover:text-red-400 transition">Сбросить все</button>
     </div>
 
   </div>
 
+  <!-- iOS Safari PWA Install Modal -->
+  <div id="iosInstallModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="bg-cinema-900 border border-cinema-750 rounded-2xl w-full max-w-sm sm:max-w-md p-5 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-cinema-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 text-cinema-950 flex items-center justify-center font-bold">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.63 1.35-.57.66-.99 1.72-.86 2.74 1 .08 2.01-.5 2.57-1.24z"/></svg>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-white">Установка на iPhone / iPad</h3>
+            <p class="text-[10px] text-gray-400">Полноэкранный кинорежим без полос Safari</p>
+          </div>
+        </div>
+        <button id="btnCloseIosModal" class="text-gray-400 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-gray-300">
+        <div class="flex items-start space-x-3 p-2.5 rounded-xl bg-cinema-850 border border-cinema-700/60">
+          <div class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0 mt-0.5">1</div>
+          <div>
+            Нажмите системную кнопку <strong>«Поделиться»</strong>
+            <span class="inline-block p-1 bg-cinema-800 rounded mx-1 text-cyan-400">
+              <svg class="w-3.5 h-3.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+            </span> 
+            в нижней панели браузера Safari.
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3 p-2.5 rounded-xl bg-cinema-850 border border-cinema-700/60">
+          <div class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0 mt-0.5">2</div>
+          <div>
+            Прокрутите список действий вниз и выберите <strong>«На экран «Домой»»</strong>
+            <span class="inline-block p-1 bg-cinema-800 rounded mx-1 text-amber-400 font-mono text-[11px]">[ ⊞ ]</span>.
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3 p-2.5 rounded-xl bg-cinema-850 border border-cinema-700/60">
+          <div class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0 mt-0.5">3</div>
+          <div>
+            Нажмите <strong>«Добавить»</strong> в правом верхнем углу. Иконка CineFrame появится рядом с вашими приложениями!
+          </div>
+        </div>
+      </div>
+
+      <button id="btnAcknowledgeIosModal" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-cinema-950 font-bold text-xs shadow-lg shadow-amber-500/25 transition">
+        Понятно
+      </button>
+    </div>
+  </div>
+
+  <!-- Master Export Dialog -->
   <div id="exportModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
     <div class="bg-cinema-900 border border-cinema-750 rounded-2xl w-full max-w-sm sm:max-w-md p-5 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b border-cinema-800 pb-3">
@@ -678,7 +791,7 @@
     </div>
   </div>
 
-  <!-- Toast Notification Box -->
+  <!-- Toast Notification Pill -->
   <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 -translate-y-16 opacity-0 pointer-events-none transition-all duration-300 bg-cinema-850/95 backdrop-blur-md border border-cinema-700 text-white px-4 py-2 rounded-full shadow-2xl flex items-center space-x-2">
     <div id="toastIcon" class="w-4 h-4 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
       <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -693,12 +806,13 @@
       isImageLoaded: false,
       originalWidth: 0,
       originalHeight: 0,
+      imageSourceDataUrl: null,
 
       // Cinema Format
       aspectRatio: 2.39,
       ratioName: 'CinemaScope 2.39:1',
 
-      // Transforms (Stored strictly in CSS logical pixels)
+      // Transforms (Stored strictly in CSS logical coordinates)
       panX: 0,
       panY: 0,
       zoom: 1.0,
@@ -738,7 +852,7 @@
       exportFormat: 'image/jpeg',
       exportQuality: 0.95,
 
-      // Mobile Bottom Sheet: 'collapsed' | 'expanded' | 'zen'
+      // Bottom Sheet Mode: 'collapsed' | 'expanded' | 'zen'
       sheetState: 'collapsed'
     };
 
@@ -751,6 +865,232 @@
     const canvasPillBar = document.getElementById('canvasPillBar');
     const dropOverlay = document.getElementById('dropOverlay');
     const imageUpload = document.getElementById('imageUpload');
+    const btnPwaInstall = document.getElementById('btnPwaInstall');
+
+    /* IndexedDB Session Storage Engine */
+    const DB_NAME = 'CineFrameStudio_DB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'studio_state';
+
+    function openDatabase() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveSessionToDB() {
+      try {
+        const db = await openDatabase();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const store = tx.objectStore(STORE_NAME);
+
+        const payload = {
+          aspectRatio: state.aspectRatio,
+          ratioName: state.ratioName,
+          panX: state.panX,
+          panY: state.panY,
+          zoom: state.zoom,
+          rotation: state.rotation,
+          flipH: state.flipH,
+          flipV: state.flipV,
+          preset: state.preset,
+          exposure: state.exposure,
+          contrast: state.contrast,
+          saturation: state.saturation,
+          temperature: state.temperature,
+          grain: state.grain,
+          vignette: state.vignette,
+          activeGrid: state.activeGrid,
+          showSubtitles: state.showSubtitles,
+          subtitleText: state.subtitleText,
+          subColor: state.subColor,
+          subSize: state.subSize,
+          showCameraHUD: state.showCameraHUD,
+          imageDataUrl: state.imageSourceDataUrl
+        };
+
+        store.put(payload, 'latest_session');
+      } catch (err) {
+        console.warn('IDB write bypassed:', err);
+      }
+    }
+
+    async function restoreSessionFromDB() {
+      try {
+        const db = await openDatabase();
+        const tx = db.transaction(STORE_NAME, 'readonly');
+        const store = tx.objectStore(STORE_NAME);
+        const req = store.get('latest_session');
+
+        return new Promise((resolve) => {
+          req.onsuccess = () => {
+            const data = req.result;
+            if (data && data.imageDataUrl) {
+              const img = new Image();
+              img.onload = () => {
+                state.image = img;
+                state.isImageLoaded = true;
+                state.originalWidth = img.naturalWidth || img.width;
+                state.originalHeight = img.naturalHeight || img.height;
+                state.imageSourceDataUrl = data.imageDataUrl;
+
+                // Restore parameters
+                state.aspectRatio = data.aspectRatio || state.aspectRatio;
+                state.ratioName = data.ratioName || state.ratioName;
+                state.panX = data.panX || 0;
+                state.panY = data.panY || 0;
+                state.zoom = data.zoom || 1.0;
+                state.rotation = data.rotation || 0;
+                state.flipH = data.flipH || 1;
+                state.flipV = data.flipV || 1;
+                state.preset = data.preset || 'none';
+                state.exposure = data.exposure || 0;
+                state.contrast = data.contrast || 0;
+                state.saturation = data.saturation || 0;
+                state.temperature = data.temperature || 0;
+                state.grain = data.grain || 0;
+                state.vignette = data.vignette || 15;
+                state.activeGrid = data.activeGrid || 'thirds';
+                state.showSubtitles = !!data.showSubtitles;
+                state.subtitleText = data.subtitleText || state.subtitleText;
+                state.subColor = data.subColor || 'yellow';
+                state.subSize = data.subSize || 'medium';
+                state.showCameraHUD = !!data.showCameraHUD;
+
+                syncRestoredUI();
+                render();
+                showToast('Сессия и фото восстановлены из памяти');
+                resolve(true);
+              };
+              img.src = data.imageDataUrl;
+            } else {
+              resolve(false);
+            }
+          };
+          req.onerror = () => resolve(false);
+        });
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function syncRestoredUI() {
+      document.getElementById('hudSourceRes').textContent = `${state.originalWidth} × ${state.originalHeight}`;
+      document.getElementById('lblCurRatioName').textContent = state.ratioName;
+      document.getElementById('headerRatioName').textContent = state.ratioName;
+      document.getElementById('headerRatioBadge').textContent = `${state.aspectRatio.toFixed(2)}:1`;
+      document.getElementById('hudRatioTag').textContent = state.ratioName;
+
+      document.getElementById('inputRotate').value = state.rotation;
+      document.getElementById('lblRotateVal').textContent = `${state.rotation.toFixed(1)}°`;
+      document.getElementById('inputZoom').value = state.zoom;
+      document.getElementById('lblZoomVal').textContent = `${state.zoom.toFixed(2)}×`;
+      document.getElementById('hudZoomVal').textContent = `${state.zoom.toFixed(2)}×`;
+
+      document.getElementById('inputExposure').value = state.exposure;
+      document.getElementById('lblExpVal').textContent = state.exposure;
+      document.getElementById('inputContrast').value = state.contrast;
+      document.getElementById('lblContVal').textContent = state.contrast;
+      document.getElementById('inputSaturation').value = state.saturation;
+      document.getElementById('lblSatVal').textContent = state.saturation;
+      document.getElementById('inputTemp').value = state.temperature;
+      document.getElementById('lblTempVal').textContent = state.temperature;
+      document.getElementById('inputGrain').value = state.grain;
+      document.getElementById('lblGrainVal').textContent = `${state.grain}%`;
+      document.getElementById('inputVignette').value = state.vignette;
+      document.getElementById('lblVignetteVal').textContent = `${state.vignette}%`;
+
+      document.getElementById('checkSubtitles').checked = state.showSubtitles;
+      document.getElementById('inputSubtitleText').value = state.subtitleText;
+      document.getElementById('selectSubColor').value = state.subColor;
+      document.getElementById('selectSubSize').value = state.subSize;
+      if (state.showSubtitles) {
+        document.getElementById('subtitlesControls').classList.remove('opacity-40', 'pointer-events-none');
+      }
+
+      document.getElementById('checkCameraHUD').checked = state.showCameraHUD;
+      if (state.showCameraHUD) {
+        document.getElementById('hudControls').classList.remove('opacity-40', 'pointer-events-none');
+      }
+    }
+
+    /* PWA Service Worker & Install Prompt Integration */
+    let deferredInstallPrompt = null;
+
+    // Detect standalone PWA mode
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) {
+      document.getElementById('pwaDisplayMode').textContent = 'PWA Standalone (iOS/OS)';
+      document.getElementById('pwaStatusText').textContent = 'PWA Installed';
+    }
+
+    // Android/Chrome beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      btnPwaInstall.classList.remove('hidden');
+      btnPwaInstall.classList.add('flex');
+    });
+
+    btnPwaInstall.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      if (choice.outcome === 'accepted') {
+        showToast('CineFrame установлен!');
+        btnPwaInstall.classList.add('hidden');
+      }
+      deferredInstallPrompt = null;
+    });
+
+    // iOS Safari Detection and Install Guide
+    const isIosSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream && !navigator.userAgent.includes('CriOS');
+    const iosInstallModal = document.getElementById('iosInstallModal');
+    
+    document.getElementById('btnIosInstallGuide').addEventListener('click', () => {
+      iosInstallModal.classList.remove('hidden');
+      iosInstallModal.classList.add('flex');
+    });
+    document.getElementById('btnCloseIosModal').addEventListener('click', () => iosInstallModal.classList.add('hidden'));
+    document.getElementById('btnAcknowledgeIosModal').addEventListener('click', () => iosInstallModal.classList.add('hidden'));
+
+    // Register embedded Service Worker via Blob URL
+    function initEmbeddedServiceWorker() {
+      if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+        const swSource = `
+          const CACHE_NAME = 'cineframe-v1';
+          self.addEventListener('install', (e) => {
+            self.skipWaiting();
+          });
+          self.addEventListener('activate', (e) => {
+            e.waitUntil(self.clients.claim());
+          });
+          self.addEventListener('fetch', (e) => {
+            if (e.request.method !== 'GET') return;
+            e.respondWith(
+              caches.match(e.request).then((res) => res || fetch(e.request).catch(() => caches.match(e.request)))
+            );
+          });
+        `;
+        const blob = new Blob([swSource], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).then(() => {
+          document.getElementById('pwaStatusBadge').classList.remove('border-emerald-500/40');
+          document.getElementById('pwaStatusBadge').classList.add('border-emerald-400');
+        }).catch((err) => {
+          console.warn('SW register notice:', err);
+        });
+      }
+    }
+    initEmbeddedServiceWorker();
 
     let grainPatternCanvas = null;
     function initGrainGenerator() {
@@ -765,12 +1105,13 @@
         gData.data[i] = val;
         gData.data[i + 1] = val;
         gData.data[i + 2] = val;
-        gData.data[i + 3] = 48; // Soft film grain baseline
+        gData.data[i + 3] = 48; // Soft baseline grain
       }
       gCtx.putImageData(gData, 0, 0);
     }
     initGrainGenerator();
 
+    /* Atmospheric Demo Scene Generator */
     function generateAtmosphericDemoScene() {
       const dw = 2880;
       const dh = 1620;
@@ -799,7 +1140,7 @@
       }
       oCtx.globalAlpha = 1.0;
 
-      // Crescent Moon with Anamorphic Glow
+      // Crescent Moon with Glow
       const mx = dw * 0.76;
       const my = dh * 0.28;
       const moonG = oCtx.createRadialGradient(mx, my, 8, mx, my, 120);
@@ -824,7 +1165,7 @@
       oCtx.closePath();
       oCtx.fill();
 
-      // Foreground Desert Horizon
+      // Desert Horizon
       oCtx.fillStyle = '#080910';
       oCtx.fillRect(0, dh * 0.83, dw, dh * 0.17);
 
@@ -843,23 +1184,26 @@
       oCtx.fillRect(0, flareY - 4, dw, 8);
       oCtx.restore();
 
+      const dataUrl = offC.toDataURL('image/jpeg', 0.96);
       const img = new Image();
       img.onload = () => {
-        loadIncomingImage(img);
+        loadIncomingImage(img, dataUrl);
         showToast('Загружен демо-кинокадр 2.8K');
       };
-      img.src = offC.toDataURL('image/jpeg', 0.96);
+      img.src = dataUrl;
     }
 
-    function loadIncomingImage(img) {
+    function loadIncomingImage(img, dataUrl = null) {
       state.image = img;
       state.isImageLoaded = true;
       state.originalWidth = img.naturalWidth || img.width;
       state.originalHeight = img.naturalHeight || img.height;
+      if (dataUrl) state.imageSourceDataUrl = dataUrl;
 
       document.getElementById('hudSourceRes').textContent = `${state.originalWidth} × ${state.originalHeight}`;
       resetGeometry();
       render();
+      saveSessionToDB();
     }
 
     function resetGeometry() {
@@ -886,13 +1230,13 @@
      * view between the header and the bottom sheet.
      */
     function getApertureRect(viewW, viewH, targetRatio) {
-      // Calculate unobstructed vertical area
-      const headerH = document.getElementById('mainHeader').offsetHeight || 52;
-      const bottomDockH = state.sheetState === 'zen' ? 24 : 64; // height of visible bottom dock
-      const pad = viewW < 640 ? 16 : 28;
+      const bottomDockH = state.sheetState === 'zen' ? 16 : (state.sheetState === 'expanded' ? 16 : 56);
+      const padX = viewW < 640 ? 16 : 28;
+      const padTop = 16;
+      const padBottom = bottomDockH + 16;
 
-      const availW = Math.max(80, viewW - pad * 2);
-      const availH = Math.max(80, viewH - (headerH + bottomDockH + pad * 2));
+      const availW = Math.max(60, viewW - padX * 2);
+      const availH = Math.max(60, viewH - (padTop + padBottom));
 
       let apW, apH;
       if (availW / availH > targetRatio) {
@@ -904,16 +1248,14 @@
       }
 
       const apX = (viewW - apW) / 2;
-      const apY = headerH + pad + (availH - apH) / 2;
+      const apY = padTop + (availH - apH) / 2;
 
       return { x: apX, y: apY, w: apW, h: apH };
     }
 
     /**
-     * CORE FIX FOR DPR SHIFT:
-     * Synchronizes canvas.width/height with devicePixelRatio while keeping
-     * canvas.style.width/height matched to getBoundingClientRect().
-     * Transforms are reset with setTransform(dpr, 0, 0, dpr, 0, 0) on every frame.
+     * CORE CALIBRATION FOR DPR AND PRECISE POSITIONING:
+     * Keeps canvas coordinate matrix mapped 1:1 to CSS logical pixels.
      */
     function render() {
       if (!canvasViewport) return;
@@ -932,7 +1274,7 @@
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
 
-      // Set matrix strictly once per frame
+      // Set transform strictly once per frame
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const viewW = rect.width;
@@ -945,7 +1287,7 @@
 
       const ap = getApertureRect(viewW, viewH, state.aspectRatio);
 
-      // Update resolution label
+      // Display cropped resolution tag
       const cropW = Math.round(state.originalHeight * state.aspectRatio);
       const cropH = state.originalHeight;
       const displayRes = `${Math.min(state.originalWidth, cropW)} × ${cropH}`;
@@ -1151,20 +1493,11 @@
         gCtx.strokeStyle = `rgba(251, 191, 36, ${Math.min(1, op + 0.25)})`;
         gCtx.lineWidth = 2.5;
 
-        // Top-left
+        // Corners
         gCtx.beginPath();
         gCtx.moveTo(ap.x, ap.y + cLen); gCtx.lineTo(ap.x, ap.y); gCtx.lineTo(ap.x + cLen, ap.y);
-        gCtx.stroke();
-        // Top-right
-        gCtx.beginPath();
         gCtx.moveTo(ap.x + ap.w - cLen, ap.y); gCtx.lineTo(ap.x + ap.w, ap.y); gCtx.lineTo(ap.x + ap.w, ap.y + cLen);
-        gCtx.stroke();
-        // Bottom-left
-        gCtx.beginPath();
         gCtx.moveTo(ap.x, ap.y + ap.h - cLen); gCtx.lineTo(ap.x, ap.y + ap.h); gCtx.lineTo(ap.x + cLen, ap.y + ap.h);
-        gCtx.stroke();
-        // Bottom-right
-        gCtx.beginPath();
         gCtx.moveTo(ap.x + ap.w - cLen, ap.y + ap.h); gCtx.lineTo(ap.x + ap.w, ap.y + ap.h); gCtx.lineTo(ap.x + ap.w, ap.y + ap.h - cLen);
         gCtx.stroke();
       }
@@ -1236,7 +1569,7 @@
     let mouseStartPanX = 0;
     let mouseStartPanY = 0;
 
-    // Mouse Controls
+    // Mouse Navigation
     canvasViewport.addEventListener('mousedown', (e) => {
       if (state.sheetState === 'expanded') {
         setBottomSheetState('collapsed');
@@ -1258,6 +1591,7 @@
       if (isMouseDragging) {
         isMouseDragging = false;
         canvas.style.cursor = 'grab';
+        saveSessionToDB();
       }
     });
 
@@ -1267,9 +1601,10 @@
       state.zoom = Math.min(3.5, Math.max(0.4, state.zoom * factor));
       updateGeometryUI();
       render();
+      saveSessionToDB();
     }, { passive: false });
 
-    // Touch Handlers with 1-to-1 CSS pixels
+    // Touch Navigation with Pinch-to-zoom & double tap
     canvasViewport.addEventListener('touchstart', (e) => {
       if (state.sheetState === 'expanded') {
         setBottomSheetState('collapsed');
@@ -1289,6 +1624,7 @@
         }
         updateGeometryUI();
         render();
+        saveSessionToDB();
         lastTapTime = 0;
         return;
       }
@@ -1328,6 +1664,7 @@
     canvasViewport.addEventListener('touchend', () => {
       isTouchPanning = false;
       touchStartDist = 0;
+      saveSessionToDB();
     });
 
     function setBottomSheetState(newState) {
@@ -1348,7 +1685,7 @@
       render();
     }
 
-    // Drag Handle touch swipe on Sheet
+    // Drag Handle touch swipe
     let sheetDragStartY = 0;
     let isDraggingSheet = false;
     const sheetHandleArea = document.getElementById('sheetHandleArea');
@@ -1384,7 +1721,7 @@
       else setBottomSheetState('expanded');
     });
 
-    // Floating Canvas Pill Controls
+    // Hold Original Button
     const btnHoldOriginal = document.getElementById('btnHoldOriginal');
     const startHold = () => {
       state.isHoldingOriginal = true;
@@ -1399,7 +1736,7 @@
     btnHoldOriginal.addEventListener('touchstart', (e) => { e.preventDefault(); startHold(); });
     btnHoldOriginal.addEventListener('touchend', endHold);
 
-    // Fit/Fill Quick Button
+    // Quick Fit/Fill Button
     document.getElementById('btnQuickFitFill').addEventListener('click', () => {
       if (state.zoom > 1.05) {
         state.zoom = 1.0;
@@ -1412,6 +1749,7 @@
       }
       updateGeometryUI();
       render();
+      saveSessionToDB();
     });
 
     // Zen Mode Toggle
@@ -1425,7 +1763,7 @@
       }
     });
 
-    // Tab Switching in Drawer
+    // Tab Switching
     document.querySelectorAll('.tab-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         document.querySelectorAll('.tab-chip').forEach(c => {
@@ -1443,7 +1781,7 @@
       });
     });
 
-    // Aspect Ratio Selection
+    // Aspect Ratio Presets
     document.querySelectorAll('.ratio-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.ratio-btn').forEach(b => {
@@ -1466,21 +1804,24 @@
         document.getElementById('hudRatioTag').textContent = state.ratioName;
 
         render();
+        saveSessionToDB();
         showToast(`Формат: ${state.ratioName}`);
       });
     });
 
-    // Sliders & Bindings
+    // Transform Sliders
     document.getElementById('inputRotate').addEventListener('input', (e) => {
       state.rotation = parseFloat(e.target.value);
       document.getElementById('lblRotateVal').textContent = `${state.rotation.toFixed(1)}°`;
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('inputZoom').addEventListener('input', (e) => {
       state.zoom = parseFloat(e.target.value);
       updateGeometryUI();
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('inputMatte').addEventListener('input', (e) => {
@@ -1492,16 +1833,19 @@
     document.getElementById('btnFlipH').addEventListener('click', () => {
       state.flipH *= -1;
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('btnFlipV').addEventListener('click', () => {
       state.flipV *= -1;
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('btnResetTransform').addEventListener('click', () => {
       resetGeometry();
       render();
+      saveSessionToDB();
       showToast('Геометрия сброшена');
     });
 
@@ -1517,6 +1861,7 @@
 
         state.preset = btn.getAttribute('data-preset');
         render();
+        saveSessionToDB();
         showToast(`Пресет: ${btn.querySelector('.text-xs').textContent}`);
       });
     });
@@ -1526,6 +1871,7 @@
         state[key] = parseFloat(e.target.value);
         document.getElementById(lblId).textContent = `${state[key]}${suffix}`;
         render();
+        saveSessionToDB();
       });
     };
 
@@ -1565,6 +1911,7 @@
       document.querySelector('[data-preset="none"]').classList.add('active', 'border-amber-500/80');
 
       render();
+      saveSessionToDB();
       showToast('Цвет сброшен');
     });
 
@@ -1580,6 +1927,7 @@
 
         state.activeGrid = btn.getAttribute('data-grid');
         render();
+        saveSessionToDB();
       });
     });
 
@@ -1592,6 +1940,7 @@
     document.getElementById('checkCornerMarks').addEventListener('change', (e) => {
       state.cornerMarks = e.target.checked;
       render();
+      saveSessionToDB();
     });
 
     // Subtitles
@@ -1602,21 +1951,25 @@
       if (state.showSubtitles) subtitlesControls.classList.remove('opacity-40', 'pointer-events-none');
       else subtitlesControls.classList.add('opacity-40', 'pointer-events-none');
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('inputSubtitleText').addEventListener('input', (e) => {
       state.subtitleText = e.target.value;
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('selectSubColor').addEventListener('change', (e) => {
       state.subColor = e.target.value;
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('selectSubSize').addEventListener('change', (e) => {
       state.subSize = e.target.value;
       render();
+      saveSessionToDB();
     });
 
     // Camera HUD
@@ -1627,6 +1980,7 @@
       if (state.showCameraHUD) hudControls.classList.remove('opacity-40', 'pointer-events-none');
       else hudControls.classList.add('opacity-40', 'pointer-events-none');
       render();
+      saveSessionToDB();
     });
 
     document.getElementById('hudFps').addEventListener('input', (e) => {
@@ -1652,17 +2006,18 @@
 
     function handleImageFile(file) {
       if (!file.type.startsWith('image/')) {
-        showToast('Пожалуйста, выберите изображение', true);
+        showToast('Пожалуйста, выберите файл изображения', true);
         return;
       }
       const reader = new FileReader();
       reader.onload = (event) => {
+        const dataUrl = event.target.result;
         const img = new Image();
         img.onload = () => {
-          loadIncomingImage(img);
+          loadIncomingImage(img, dataUrl);
           showToast(`Загружен: ${file.name}`);
         };
-        img.src = event.target.result;
+        img.src = dataUrl;
       };
       reader.readAsDataURL(file);
     }
@@ -1692,6 +2047,101 @@
     });
 
     document.getElementById('btnSample').addEventListener('click', generateAtmosphericDemoScene);
+
+    // PWA Tab Actions
+    document.getElementById('btnSaveSessionNow').addEventListener('click', async () => {
+      await saveSessionToDB();
+      showToast('Сессия сохранена в локальный кэш!');
+    });
+
+    document.getElementById('btnClearStorage').addEventListener('click', async () => {
+      try {
+        const db = await openDatabase();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).clear();
+        showToast('Кэш приложения очищен');
+      } catch (e) {
+        showToast('Ошибка очистки кэша', true);
+      }
+    });
+
+    // PWA Package File Downloaders
+    document.getElementById('btnDownloadManifest').addEventListener('click', () => {
+      const manifestData = {
+        name: "CineFrame Studio — Кинокадр",
+        short_name: "CineFrame",
+        description: "Кинематографическое кадрирование фото и цветокоррекция",
+        start_url: "./index.html",
+        display: "standalone",
+        orientation: "any",
+        background_color: "#07080c",
+        theme_color: "#07080c",
+        icons: [
+          { src: "icon-192.png", sizes: "192x192", type: "image/png" },
+          { src: "icon-512.png", sizes: "512x512", type: "image/png" }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(manifestData, null, 2)], { type: 'application/json' });
+      triggerFileDownload(blob, 'manifest.json');
+      showToast('Скачан manifest.json');
+    });
+
+    document.getElementById('btnDownloadSw').addEventListener('click', () => {
+      const swCode = `// CineFrame Studio Service Worker
+const CACHE_NAME = 'cineframe-v1';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.json'
+];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(
+    caches.match(e.request).then((cached) => {
+      return cached || fetch(e.request).then((response) => {
+        return caches.open(CACHE_NAME).then((cache) => {
+          cache.put(e.request, response.clone());
+          return response;
+        });
+      });
+    }).catch(() => caches.match('./index.html'))
+  );
+});
+`;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      triggerFileDownload(blob, 'sw.js');
+      showToast('Скачан sw.js для хостинга');
+    });
+
+    function triggerFileDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
 
     const exportModal = document.getElementById('exportModal');
     document.getElementById('btnExport').addEventListener('click', () => {
@@ -1762,7 +2212,7 @@
           masterC.height = dims.height;
           const mCtx = masterC.getContext('2d');
 
-          // Master Letterbox background
+          // Matte Letterbox background
           mCtx.fillStyle = '#000000';
           mCtx.fillRect(0, 0, dims.width, dims.height);
 
@@ -1857,14 +2307,14 @@
                   title: 'CineFrame Studio',
                   text: `Кинокадр ${state.ratioName}`
                 });
-                showToast('Кадр экспортирован!');
+                showToast('Кадр экспортирован в Фото!');
                 return;
               } catch (err) {
                 if (err.name === 'AbortError') return;
               }
             }
 
-            // Fallback download
+            // Fallback direct download
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -1908,10 +2358,11 @@
     document.getElementById('btnMasterReset').addEventListener('click', () => {
       resetGeometry();
       document.getElementById('btnResetGrade').click();
+      saveSessionToDB();
       showToast('Все настройки сброшены');
     });
 
-    // Window Resize & Orientation change
+    // Resize & Orientation listeners
     window.addEventListener('resize', () => {
       render();
     });
@@ -1919,7 +2370,17 @@
       setTimeout(render, 150);
     });
 
-    // Keyboard shortcuts
+    // Online / Offline Network detection
+    window.addEventListener('online', () => {
+      document.getElementById('footerInfo').textContent = 'PWA Online Active';
+      showToast('Подключение восстановлено');
+    });
+    window.addEventListener('offline', () => {
+      document.getElementById('footerInfo').textContent = 'PWA Offline Mode';
+      showToast('Оффлайн-режим активен');
+    });
+
+    // Keyboard Hotkeys
     window.addEventListener('keydown', (e) => {
       if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
       if (e.key === 'r' || e.key === 'к') {
@@ -1934,10 +2395,13 @@
       if (e.key === ' ') endHold();
     });
 
-    // Application Launch
-    window.addEventListener('DOMContentLoaded', () => {
+    // Initial Hydration
+    window.addEventListener('DOMContentLoaded', async () => {
       setBottomSheetState('collapsed');
-      generateAtmosphericDemoScene();
+      const restored = await restoreSessionFromDB();
+      if (!restored) {
+        generateAtmosphericDemoScene();
+      }
     });
   </script>
 </body>
