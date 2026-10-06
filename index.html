@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CineFrame Studio — Кинокадр & Цветокоррекция</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Space Grotesk & Cinzel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cinema: {
+              950: '#07080a',
+              900: '#0d0f14',
+              850: '#13161c',
+              800: '#1a1e27',
+              700: '#252a37',
+              600: '#353c4e',
+              500: '#525d77',
+              amber: '#f59e0b',
+              gold: '#fbbf24',
+              teal: '#06b6d4',
+              red: '#ef4444'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinzel: ['Cinzel', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Custom Studio Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d0f14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #252a37;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #353c4e;
+    }
+
+    /* Precision Range Sliders */
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: #1a1e27;
+      border-radius: 4px;
+      height: 6px;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fbbf24;
+      cursor: pointer;
+      box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+      transition: transform 0.1s ease, background-color 0.1s ease;
+      border: 2px solid #0d0f14;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      background: #ffffff;
+    }
+
+    /* Subtle grid pattern background */
+    .bg-studio-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+
+    /* Pulsing recording light */
+    @keyframes pulse-rec {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.9); }
+    }
+    .animate-pulse-rec {
+      animation: pulse-rec 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+  </style>
+</head>
+<body class="bg-cinema-950 text-gray-200 font-sans h-screen flex flex-col overflow-hidden select-none">
+
+  <header class="h-14 border-b border-cinema-800/80 bg-cinema-900/90 backdrop-blur px-4 flex items-center justify-between shrink-0 z-30">
+    <div class="flex items-center space-x-3">
+      <!-- Logo icon -->
+      <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/20 text-cinema-950">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2"/>
+          <path d="M7 5v14M17 5v14M2 10h20M2 14h20" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <span class="font-bold text-sm tracking-wider uppercase text-white">CineFrame<span class="text-amber-400">.Studio</span></span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded bg-cinema-800 text-amber-300/90 font-mono font-medium border border-cinema-700/50">DCI-4K</span>
+        </div>
+        <p class="text-[10px] text-gray-400 hidden sm:block">Кинематографическое кадрирование &amp; цветогрейдинг</p>
+      </div>
+    </div>
+
+    <!-- Center status readout -->
+    <div class="hidden md:flex items-center space-x-3 text-xs font-mono bg-cinema-850 px-3 py-1 rounded-md border border-cinema-700/60">
+      <div class="flex items-center space-x-1.5">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse-rec"></span>
+        <span class="text-red-400 font-bold tracking-wider">REC</span>
+      </div>
+      <span class="text-cinema-600">|</span>
+      <span class="text-gray-400" id="headerRatioName">CinemaScope 2.39:1</span>
+      <span class="text-cinema-600">|</span>
+      <span class="text-amber-400/90" id="headerResolution">3840 × 1608</span>
+    </div>
+
+    <!-- Quick action buttons -->
+    <div class="flex items-center space-x-2">
+      <button id="btnSample" title="Загрузить тестовый кинокадр" class="px-3 py-1.5 rounded-lg bg-cinema-800 hover:bg-cinema-700 text-xs font-medium text-gray-200 hover:text-white border border-cinema-700/70 transition flex items-center space-x-1.5 shadow-sm">
+        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+        <span class="hidden sm:inline">Демо-кадр</span>
+      </button>
+
+      <label for="imageUpload" class="px-3 py-1.5 rounded-lg bg-cinema-800 hover:bg-cinema-700 text-xs font-medium text-gray-200 hover:text-white border border-cinema-700/70 transition cursor-pointer flex items-center space-x-1.5 shadow-sm">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+        <span>Открыть фото</span>
+        <input type="file" id="imageUpload" accept="image/*" class="hidden">
+      </label>
+
+      <button id="btnExportModal" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-cinema-950 font-semibold text-xs transition flex items-center space-x-1.5 shadow-lg shadow-amber-500/20">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+        </svg>
+        <span>Экспорт</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+
+    <!-- LEFT WORKSPACE: Interactive Canvas Area -->
+    <div id="canvasViewport" class="flex-1 relative bg-cinema-950 bg-studio-grid flex items-center justify-center overflow-hidden p-2 sm:p-4">
+      
+      <!-- Drop Zone Overlay (shows when dragging file over window) -->
+      <div id="dropOverlay" class="absolute inset-4 z-40 rounded-2xl border-2 border-dashed border-amber-400/80 bg-cinema-950/90 backdrop-blur-sm hidden flex-col items-center justify-center text-center p-6">
+        <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-1">Перетащите кинематографический кадр</h3>
+        <p class="text-xs text-gray-400 max-w-sm">Поддерживаются форматы JPEG, PNG, WEBP, AVIF в максимальном исходном разрешении</p>
+      </div>
+
+      <!-- Main Canvas Element -->
+      <canvas id="mainCanvas" class="cursor-grab active:cursor-grabbing max-w-full max-h-full rounded shadow-2xl transition-all"></canvas>
+
+      <!-- Floating Canvas Quick HUD Tools (Bottom Center) -->
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 bg-cinema-900/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-cinema-700/80 shadow-2xl flex items-center space-x-3 text-xs z-20">
+        <!-- Zoom readout & Reset -->
+        <button id="btnZoomOut" class="text-gray-400 hover:text-white p-1 hover:bg-cinema-800 rounded transition" title="Уменьшить">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+        </button>
+        <span id="labelZoomVal" class="font-mono text-[11px] text-amber-400 font-medium min-w-[42px] text-center">100%</span>
+        <button id="btnZoomIn" class="text-gray-400 hover:text-white p-1 hover:bg-cinema-800 rounded transition" title="Увеличить">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="h-3 w-[1px] bg-cinema-700"></div>
+        
+        <!-- Fit / Fill buttons -->
+        <button id="btnFit" class="text-gray-300 hover:text-amber-400 text-[11px] font-medium px-2 py-0.5 hover:bg-cinema-800 rounded transition" title="Вписать в рамку (Fit)">Вписать</button>
+        <button id="btnFill" class="text-gray-300 hover:text-amber-400 text-[11px] font-medium px-2 py-0.5 hover:bg-cinema-800 rounded transition" title="Заполнить кадр (Fill)">Заполнить</button>
+        
+        <div class="h-3 w-[1px] bg-cinema-700"></div>
+
+        <!-- Before/After toggle -->
+        <button id="btnCompare" class="text-gray-300 hover:text-cyan-400 text-[11px] font-medium px-2 py-0.5 hover:bg-cinema-800 rounded transition flex items-center space-x-1" title="Зажмите для просмотра оригинала">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+          <span class="hidden sm:inline">Оригинал</span>
+        </button>
+      </div>
+
+      <!-- Canvas Top-Left Camera Info Overlay -->
+      <div class="absolute top-4 left-4 pointer-events-none hidden sm:flex flex-col space-y-1 font-mono text-[10px] text-gray-400/90 bg-cinema-900/60 backdrop-blur-sm p-2 rounded border border-cinema-800/60 z-20">
+        <div class="flex items-center space-x-2">
+          <span class="text-amber-400 font-bold">FRAME GUIDES:</span>
+          <span id="overlayCropRatio" class="text-white">2.39:1 CinemaScope</span>
+        </div>
+        <div>SOURCE: <span id="overlaySrcRes" class="text-gray-300">—</span></div>
+        <div>CROP VIEW: <span id="overlayFramedRes" class="text-cyan-400">—</span></div>
+      </div>
+    </div>
+
+    <aside class="w-full md:w-96 bg-cinema-900 border-t md:border-t-0 md:border-l border-cinema-800/80 flex flex-col shrink-0 h-[45vh] md:h-full z-20 shadow-2xl">
+      
+      <!-- Studio Tabs Navigation -->
+      <div class="grid grid-cols-4 bg-cinema-950/80 border-b border-cinema-800/80 p-1 text-xs font-medium">
+        <button data-tab="tab-format" class="tab-btn active py-2 rounded text-center text-amber-400 bg-cinema-850 shadow-sm border border-cinema-700/50 flex flex-col items-center justify-center gap-1 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.5" stroke-width="2"/></svg>
+          <span>Формат</span>
+        </button>
+        <button data-tab="tab-grade" class="tab-btn py-2 rounded text-center text-gray-400 hover:text-gray-200 flex flex-col items-center justify-center gap-1 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+          <span>Грейдинг</span>
+        </button>
+        <button data-tab="tab-compose" class="tab-btn py-2 rounded text-center text-gray-400 hover:text-gray-200 flex flex-col items-center justify-center gap-1 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16M6 4v16M12 4v16M18 4v16"/></svg>
+          <span>Сетки</span>
+        </button>
+        <button data-tab="tab-cinema" class="tab-btn py-2 rounded text-center text-gray-400 hover:text-gray-200 flex flex-col items-center justify-center gap-1 transition">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+          <span>Титры/HUD</span>
+        </button>
+      </div>
+
+      <!-- Tab Content Scrollable Area -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-6">
+
+        <div id="tab-format" class="tab-pane block space-y-5">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-gray-400">Кинематографический формат</label>
+              <span class="text-[11px] font-mono text-amber-400" id="currentRatioBadge">2.39:1</span>
+            </div>
+            
+            <!-- Aspect Ratio Preset Cards Grid -->
+            <div class="grid grid-cols-2 gap-2" id="ratioGrid">
+              <!-- 2.39:1 -->
+              <button data-ratio="2.39" data-name="CinemaScope / Anamorphic" class="ratio-btn active p-2.5 rounded-lg bg-cinema-850 border border-amber-500/80 text-left transition hover:border-amber-400 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-amber-400">2.39 : 1</span>
+                  <span class="w-6 h-2.5 rounded-sm border border-amber-400/50 bg-amber-400/20"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">CinemaScope</div>
+                <div class="text-[9px] text-gray-400 truncate">Широкоэкранный блокбастер</div>
+              </button>
+
+              <!-- 2.76:1 -->
+              <button data-ratio="2.76" data-name="Ultra Panavision 70" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">2.76 : 1</span>
+                  <span class="w-7 h-2 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">Ultra Panavision</div>
+                <div class="text-[9px] text-gray-400 truncate">«Омерзительная 8», «Бен-Гур»</div>
+              </button>
+
+              <!-- 2.00:1 -->
+              <button data-ratio="2.00" data-name="Univisium (Netflix / Fincher)" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">2.00 : 1</span>
+                  <span class="w-6 h-3 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">Univisium 2:1</div>
+                <div class="text-[9px] text-gray-400 truncate">Стриминг, Финчер, Netflix</div>
+              </button>
+
+              <!-- 1.85:1 -->
+              <button data-ratio="1.85" data-name="Academy Flat" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">1.85 : 1</span>
+                  <span class="w-5 h-3 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">Academy Flat</div>
+                <div class="text-[9px] text-gray-400 truncate">Стандарт кинопроката США</div>
+              </button>
+
+              <!-- 1.66:1 -->
+              <button data-ratio="1.66" data-name="European Widescreen" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">1.66 : 1</span>
+                  <span class="w-5 h-3.5 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">European 1.66</div>
+                <div class="text-[9px] text-gray-400 truncate">Европейский артхаус, Кубрик</div>
+              </button>
+
+              <!-- 1.43:1 -->
+              <button data-ratio="1.43" data-name="IMAX 70mm" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">1.43 : 1</span>
+                  <span class="w-4 h-3.5 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">IMAX 70mm</div>
+                <div class="text-[9px] text-gray-400 truncate">Кристофер Нолан, Оппенгеймер</div>
+              </button>
+
+              <!-- 1.33:1 (4:3) -->
+              <button data-ratio="1.333" data-name="Academy Classic 4:3" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">1.33 : 1</span>
+                  <span class="w-4 h-3.5 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">Academy 4:3</div>
+                <div class="text-[9px] text-gray-400 truncate">«Маяк», винтажная плёнка</div>
+              </button>
+
+              <!-- 16:9 -->
+              <button data-ratio="1.778" data-name="16:9 Broadcast HD" class="ratio-btn p-2.5 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 group">
+                <div class="flex items-center justify-between">
+                  <span class="font-mono text-xs font-bold text-gray-200 group-hover:text-amber-400">1.78 : 1</span>
+                  <span class="w-5 h-3 rounded-sm border border-gray-500 bg-gray-700/30"></span>
+                </div>
+                <div class="text-[11px] font-medium text-white truncate mt-1">16:9 HDTV</div>
+                <div class="text-[9px] text-gray-400 truncate">Телевидение & YouTube</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Transform Controls -->
+          <div class="space-y-4 pt-2 border-t border-cinema-800/80">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold uppercase tracking-wider text-gray-400">Трансформация</label>
+              <button id="btnResetTransform" class="text-[10px] text-gray-400 hover:text-amber-400 transition">Сброс геометрии</button>
+            </div>
+
+            <!-- Rotation / Horizon -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Горизонт / Поворот</span>
+                <span id="valRotate" class="text-amber-400">0.0°</span>
+              </div>
+              <input type="range" id="inputRotate" min="-45" max="45" step="0.5" value="0" class="w-full">
+              <div class="flex justify-between text-[9px] text-gray-500 font-mono mt-0.5">
+                <span>-45°</span>
+                <span class="cursor-pointer hover:text-white" onclick="document.getElementById('inputRotate').value=0; document.getElementById('inputRotate').dispatchEvent(new Event('input'))">0° центр</span>
+                <span>+45°</span>
+              </div>
+            </div>
+
+            <!-- Zoom Slider -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Масштаб (Zoom)</span>
+                <span id="valZoom" class="text-amber-400">1.00×</span>
+              </div>
+              <input type="range" id="inputZoom" min="0.5" max="3.5" step="0.01" value="1.0" class="w-full">
+            </div>
+
+            <!-- Flip Controls -->
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <button id="btnFlipH" class="py-1.5 px-3 rounded-lg bg-cinema-850 hover:bg-cinema-800 border border-cinema-700/60 text-xs font-medium text-gray-300 flex items-center justify-center space-x-2 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span>Отразить по гор.</span>
+              </button>
+              <button id="btnFlipV" class="py-1.5 px-3 rounded-lg bg-cinema-850 hover:bg-cinema-800 border border-cinema-700/60 text-xs font-medium text-gray-300 flex items-center justify-center space-x-2 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+                <span>Отразить по верт.</span>
+              </button>
+            </div>
+
+            <!-- Matte Darkness Slider -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Затемнение каше (Matte)</span>
+                <span id="valMatte" class="text-amber-400">85%</span>
+              </div>
+              <input type="range" id="inputMatte" min="20" max="100" step="1" value="85" class="w-full">
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-grade" class="tab-pane hidden space-y-5">
+          
+          <!-- Cinematic Presets -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-gray-400">Кино-луки (LUT Presets)</label>
+              <button id="btnResetGrade" class="text-[10px] text-gray-400 hover:text-amber-400 transition">Сброс цвета</button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2" id="presetGrid">
+              <!-- Default Normal -->
+              <button data-preset="none" class="preset-btn active p-2 rounded-lg bg-cinema-850 border border-amber-500/80 text-left transition hover:border-amber-400">
+                <div class="text-xs font-bold text-white">Стандарт</div>
+                <div class="text-[9px] text-gray-400">Исходная цветопередача</div>
+              </button>
+
+              <!-- Teal & Orange -->
+              <button data-preset="teal-orange" class="preset-btn p-2 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="text-xs font-bold text-amber-400 flex items-center justify-between">
+                  <span>Teal &amp; Orange</span>
+                  <span class="w-3 h-3 rounded-full bg-gradient-to-r from-cyan-500 to-amber-500"></span>
+                </div>
+                <div class="text-[9px] text-gray-400">Голливудский блокбастер</div>
+              </button>
+
+              <!-- Kodak 500T -->
+              <button data-preset="kodak" class="preset-btn p-2 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="text-xs font-bold text-amber-200 flex items-center justify-between">
+                  <span>Kodak 500T</span>
+                  <span class="w-3 h-3 rounded-full bg-amber-600"></span>
+                </div>
+                <div class="text-[9px] text-gray-400">Теплый пленочный винтаж</div>
+              </button>
+
+              <!-- Noir Monochrome -->
+              <button data-preset="noir" class="preset-btn p-2 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="text-xs font-bold text-gray-200 flex items-center justify-between">
+                  <span>Noir B&amp;W</span>
+                  <span class="w-3 h-3 rounded-full bg-gradient-to-r from-gray-900 to-white"></span>
+                </div>
+                <div class="text-[9px] text-gray-400">Глубокий нуар-контраст</div>
+              </button>
+
+              <!-- Cyber Neon -->
+              <button data-preset="cyber" class="preset-btn p-2 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="text-xs font-bold text-cyan-300 flex items-center justify-between">
+                  <span>Cyber Neon</span>
+                  <span class="w-3 h-3 rounded-full bg-gradient-to-r from-pink-500 to-cyan-400"></span>
+                </div>
+                <div class="text-[9px] text-gray-400">Холодные тени, Blade Runner</div>
+              </button>
+
+              <!-- Bleach Bypass -->
+              <button data-preset="bleach" class="preset-btn p-2 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                  <span>Bleach Bypass</span>
+                  <span class="w-3 h-3 rounded-full bg-slate-400"></span>
+                </div>
+                <div class="text-[9px] text-gray-400">Выбеленный суровый кадр</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Color Correction Sliders -->
+          <div class="space-y-3.5 pt-2 border-t border-cinema-800/80">
+            <label class="text-xs font-semibold uppercase tracking-wider text-gray-400">Тонкие настройки</label>
+
+            <!-- Exposure / Brightness -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Экспозиция / Яркость</span>
+                <span id="valExposure" class="text-amber-400">0</span>
+              </div>
+              <input type="range" id="inputExposure" min="-60" max="60" step="1" value="0" class="w-full">
+            </div>
+
+            <!-- Contrast -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Контраст</span>
+                <span id="valContrast" class="text-amber-400">0</span>
+              </div>
+              <input type="range" id="inputContrast" min="-50" max="60" step="1" value="0" class="w-full">
+            </div>
+
+            <!-- Saturation -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Насыщенность</span>
+                <span id="valSaturation" class="text-amber-400">0</span>
+              </div>
+              <input type="range" id="inputSaturation" min="-100" max="100" step="1" value="0" class="w-full">
+            </div>
+
+            <!-- Color Temperature -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Температура (Warm / Cool)</span>
+                <span id="valTemp" class="text-amber-400">0</span>
+              </div>
+              <input type="range" id="inputTemp" min="-50" max="50" step="1" value="0" class="w-full">
+              <div class="flex justify-between text-[9px] text-gray-500 font-mono mt-0.5">
+                <span class="text-cyan-400">Холодный (Cool)</span>
+                <span class="text-amber-400">Теплый (Warm)</span>
+              </div>
+            </div>
+
+            <!-- Film Grain -->
+            <div class="pt-2 border-t border-cinema-800/80">
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300 flex items-center space-x-1.5">
+                  <span>Пленочное зерно (35mm Grain)</span>
+                </span>
+                <span id="valGrain" class="text-amber-400">0%</span>
+              </div>
+              <input type="range" id="inputGrain" min="0" max="70" step="1" value="0" class="w-full">
+            </div>
+
+            <!-- Vignette -->
+            <div>
+              <div class="flex justify-between text-xs mb-1 font-mono">
+                <span class="text-gray-300">Кино-виньетка (Vignette)</span>
+                <span id="valVignette" class="text-amber-400">20%</span>
+              </div>
+              <input type="range" id="inputVignette" min="0" max="80" step="1" value="20" class="w-full">
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-compose" class="tab-pane hidden space-y-5">
+          <div>
+            <label class="text-xs font-semibold uppercase tracking-wider text-gray-400 block mb-2">Композиционные направляющие</label>
+            <div class="grid grid-cols-2 gap-2" id="gridPresetContainer">
+              
+              <!-- Rule of Thirds -->
+              <button data-grid="thirds" class="grid-btn active p-3 rounded-lg bg-cinema-850 border border-amber-500/80 text-left transition hover:border-amber-400">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M8 3v18M16 3v18M3 8h18M3 16h18"/></svg>
+                  <span class="text-xs font-semibold text-white">Правило третей</span>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">Rule of Thirds для баланса кадра</p>
+              </button>
+
+              <!-- Golden Ratio -->
+              <button data-grid="golden" class="grid-btn p-3 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+                  <span class="text-xs font-semibold text-white">Золотое сечение</span>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">Гармония пропорций 1:1.618</p>
+              </button>
+
+              <!-- Crosshair -->
+              <button data-grid="crosshair" class="grid-btn p-3 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="1.8"/><path stroke-width="1.8" d="M12 7v10M7 12h10"/></svg>
+                  <span class="text-xs font-semibold text-white">Перекрестие</span>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">Центральная симметрия (Уэс Андерсон)</p>
+              </button>
+
+              <!-- Safe Area -->
+              <button data-grid="safe" class="grid-btn p-3 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.8"/><rect x="6" y="6" width="12" height="12" rx="1" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+                  <span class="text-xs font-semibold text-white">Safe Action Area</span>
+                </div>
+                <p class="text-[10px] text-gray-400 mt-1">ТВ зоны безопасности 90% и 80%</p>
+              </button>
+
+              <!-- None -->
+              <button data-grid="none" class="grid-btn p-3 rounded-lg bg-cinema-850 border border-cinema-700/60 text-left transition hover:border-cinema-500 col-span-2">
+                <div class="flex items-center space-x-2">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="1.8" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                  <span class="text-xs font-semibold text-white">Без сетки (Чистый монитор)</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Framing Line Overlay Options -->
+          <div class="pt-2 border-t border-cinema-800/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-300 font-medium">Яркость рамки видоискателя</span>
+              <span id="valGuideOpacity" class="text-xs font-mono text-amber-400">70%</span>
+            </div>
+            <input type="range" id="inputGuideOpacity" min="10" max="100" step="5" value="70" class="w-full">
+            
+            <div class="flex items-center justify-between pt-2">
+              <span class="text-xs text-gray-300">Угловые метки кадра (Corner Marks)</span>
+              <input type="checkbox" id="checkCornerMarks" checked class="w-4 h-4 rounded accent-amber-500 cursor-pointer">
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-cinema" class="tab-pane hidden space-y-5">
+          
+          <!-- Cinema Subtitles -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold uppercase tracking-wider text-gray-400">Кино-субтитры (35mm Subtitles)</label>
+              <input type="checkbox" id="checkSubtitles" class="w-4 h-4 rounded accent-amber-500 cursor-pointer">
+            </div>
+            
+            <div id="subtitlesControls" class="space-y-3 opacity-50 pointer-events-none transition">
+              <textarea id="inputSubtitleText" rows="2" class="w-full bg-cinema-850 border border-cinema-700/80 rounded-lg p-2.5 text-xs text-white placeholder-gray-500 focus:border-amber-400 focus:outline-none transition resize-none" placeholder="Введите реплику персонажа или цитату из фильма...">— All those moments will be lost in time, like tears in rain.</textarea>
+              
+              <div class="grid grid-cols-2 gap-2">
+                <!-- Color style -->
+                <div>
+                  <label class="text-[10px] text-gray-400 block mb-1">Стиль шрифта</label>
+                  <select id="selectSubColor" class="w-full bg-cinema-850 border border-cinema-700/80 rounded px-2 py-1 text-xs text-gray-200">
+                    <option value="yellow">Классический желтый (35mm)</option>
+                    <option value="white">Чистый белый с тенью</option>
+                    <option value="cyan">Sci-Fi Cyan</option>
+                  </select>
+                </div>
+                <!-- Size -->
+                <div>
+                  <label class="text-[10px] text-gray-400 block mb-1">Размер текста</label>
+                  <select id="selectSubSize" class="w-full bg-cinema-850 border border-cinema-700/80 rounded px-2 py-1 text-xs text-gray-200">
+                    <option value="small">Компактный</option>
+                    <option value="medium" selected>Стандартный (Кино)</option>
+                    <option value="large">Крупный</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Camera HUD / Technical Metadata -->
+          <div class="pt-3 border-t border-cinema-800/80 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-gray-400 block">Метаданные камеры (HUD)</label>
+                <span class="text-[10px] text-gray-500">Водяной знак режиссерского монитора</span>
+              </div>
+              <input type="checkbox" id="checkCameraHUD" class="w-4 h-4 rounded accent-amber-500 cursor-pointer">
+            </div>
+
+            <div id="hudControls" class="space-y-2 text-xs opacity-50 pointer-events-none transition">
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-[10px] text-gray-400 block">FPS</label>
+                  <input type="text" id="hudFps" value="24.000 FPS" class="w-full bg-cinema-850 border border-cinema-700/80 rounded px-2 py-1 text-xs font-mono text-gray-200">
+                </div>
+                <div>
+                  <label class="text-[10px] text-gray-400 block">Объектив (Lens)</label>
+                  <input type="text" id="hudLens" value="35mm T1.4" class="w-full bg-cinema-850 border border-cinema-700/80 rounded px-2 py-1 text-xs font-mono text-gray-200">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Letterbox Matte Option -->
+          <div class="pt-3 border-t border-cinema-800/80 space-y-2">
+            <label class="text-xs font-semibold uppercase tracking-wider text-gray-400 block">Режим экспорта рамки</label>
+            <div class="space-y-1.5">
+              <label class="flex items-center space-x-2 text-xs text-gray-200 cursor-pointer">
+                <input type="radio" name="exportMatteMode" value="pure" checked class="accent-amber-500">
+                <span><strong>Чистый кроп</strong> (Точное разрешение выбранного формата)</span>
+              </label>
+              <label class="flex items-center space-x-2 text-xs text-gray-200 cursor-pointer">
+                <input type="radio" name="exportMatteMode" value="letterbox169" class="accent-amber-500">
+                <span><strong>Каше на 16:9</strong> (С черными кино-полосами для ТВ / YouTube)</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="p-3 bg-cinema-950/90 border-t border-cinema-800/80 flex items-center justify-between text-[11px] text-gray-400 font-mono">
+        <div class="flex items-center space-x-2 truncate">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span id="footerInfo">Готов к рендеру</span>
+        </div>
+        <button id="btnResetAll" class="text-gray-400 hover:text-red-400 transition" title="Сбросить все параметры">Сброс (R)</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <div id="exportModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-cinema-900 border border-cinema-700/80 rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-5 animate-scale-up">
+      <div class="flex items-center justify-between border-b border-cinema-800 pb-3">
+        <div class="flex items-center space-x-2">
+          <div class="w-6 h-6 rounded bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          </div>
+          <h3 class="font-bold text-sm text-white">Экспорт кинематографического кадра</h3>
+        </div>
+        <button id="btnCloseExportModal" class="text-gray-400 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Export Settings Details -->
+      <div class="space-y-4 text-xs">
+        <div class="bg-cinema-850 p-3 rounded-lg border border-cinema-700/60 font-mono space-y-1">
+          <div class="flex justify-between text-gray-400">
+            <span>Выходное разрешение:</span>
+            <span id="modalExportRes" class="text-amber-400 font-bold">3840 × 1608</span>
+          </div>
+          <div class="flex justify-between text-gray-400">
+            <span>Соотношение сторон:</span>
+            <span id="modalExportRatio" class="text-white">2.39:1 CinemaScope</span>
+          </div>
+          <div class="flex justify-between text-gray-400">
+            <span>Режим каше:</span>
+            <span id="modalExportMatte" class="text-cyan-400">Чистый кроп</span>
+          </div>
+        </div>
+
+        <!-- Format selector -->
+        <div>
+          <label class="block text-gray-300 font-medium mb-1.5">Формат файла</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button data-format="image/jpeg" class="export-format-btn active py-2 rounded-lg bg-cinema-850 border border-amber-500 text-amber-400 font-bold transition">JPEG (Высокое качество)</button>
+            <button data-format="image/png" class="export-format-btn py-2 rounded-lg bg-cinema-850 border border-cinema-700 text-gray-300 transition">PNG (Без потерь)</button>
+          </div>
+        </div>
+
+        <!-- Quality slider for JPEG -->
+        <div id="qualityControlGroup">
+          <div class="flex justify-between font-mono mb-1 text-gray-300">
+            <span>Качество JPEG:</span>
+            <span id="valJpegQuality" class="text-amber-400">95%</span>
+          </div>
+          <input type="range" id="inputJpegQuality" min="70" max="100" step="1" value="95" class="w-full">
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex items-center space-x-3 pt-2">
+        <button id="btnCancelExport" class="flex-1 py-2.5 rounded-lg bg-cinema-800 hover:bg-cinema-700 text-gray-300 font-medium text-xs transition">Отмена</button>
+        <button id="btnPerformExport" class="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-cinema-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          <span>Сохранить кадр</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Alert Box -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 bg-cinema-850 border border-cinema-700/90 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+    <div id="toastIcon" class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    </div>
+    <span id="toastMessage" class="text-xs font-medium">Действие выполнено</span>
+  </div>
+
+  <script>
+    /* Application State Manager */
+    const state = {
+      image: null,
+      isImageLoaded: false,
+      originalWidth: 0,
+      originalHeight: 0,
+      aspectRatio: 2.39,
+      ratioName: 'CinemaScope 2.39:1',
+      
+      // Transform
+      panX: 0,
+      panY: 0,
+      zoom: 1.0,
+      rotation: 0,
+      flipH: 1,
+      flipV: 1,
+      matteOpacity: 0.85,
+      guideOpacity: 0.70,
+      cornerMarks: true,
+
+      // Composition
+      activeGrid: 'thirds', // 'thirds', 'golden', 'crosshair', 'safe', 'none'
+
+      // Grading
+      preset: 'none',
+      exposure: 0,
+      contrast: 0,
+      saturation: 0,
+      temperature: 0,
+      grain: 0,
+      vignette: 20,
+
+      // Subtitles & HUD
+      showSubtitles: false,
+      subtitleText: '— All those moments will be lost in time, like tears in rain.',
+      subColor: 'yellow',
+      subSize: 'medium',
+      showCameraHUD: false,
+      hudFps: '24.000 FPS',
+      hudLens: '35mm T1.4',
+
+      // Export
+      exportMatteMode: 'pure', // 'pure' or 'letterbox169'
+      exportFormat: 'image/jpeg',
+      exportQuality: 0.95,
+
+      // Interaction
+      isDragging: false,
+      startX: 0,
+      startY: 0,
+      compareOriginal: false
+    };
+
+    /* DOM Element References */
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+    const canvasViewport = document.getElementById('canvasViewport');
+    const dropOverlay = document.getElementById('dropOverlay');
+    const imageUpload = document.getElementById('imageUpload');
+
+    /* Grain Texture Buffer for Performance */
+    let grainNoiseCanvas = null;
+
+    function initGrainTexture() {
+      const size = 256;
+      grainNoiseCanvas = document.createElement('canvas');
+      grainNoiseCanvas.width = size;
+      grainNoiseCanvas.height = size;
+      const gCtx = grainNoiseCanvas.getContext('2d');
+      const imgData = gCtx.createImageData(size, size);
+      const data = imgData.data;
+      for (let i = 0; i < data.length; i += 4) {
+        const val = (Math.random() * 255) | 0;
+        data[i] = val;
+        data[i + 1] = val;
+        data[i + 2] = val;
+        data[i + 3] = 40; // Soft baseline noise
+      }
+      gCtx.putImageData(imgData, 0, 0);
+    }
+    initGrainTexture();
+
+    function generateCinematicDemoImage() {
+      const w = 2560;
+      const h = 1440;
+      const demoCanvas = document.createElement('canvas');
+      demoCanvas.width = w;
+      demoCanvas.height = h;
+      const dCtx = demoCanvas.getContext('2d');
+
+      // Atmospheric twilight sky
+      const skyGrad = dCtx.createLinearGradient(0, 0, 0, h);
+      skyGrad.addColorStop(0, '#060a17');
+      skyGrad.addColorStop(0.35, '#121e3a');
+      skyGrad.addColorStop(0.65, '#3b2344');
+      skyGrad.addColorStop(0.85, '#9d4239');
+      skyGrad.addColorStop(1, '#f38944');
+      dCtx.fillStyle = skyGrad;
+      dCtx.fillRect(0, 0, w, h);
+
+      // Distant stars
+      dCtx.fillStyle = '#ffffff';
+      for (let i = 0; i < 180; i++) {
+        const sx = Math.random() * w;
+        const sy = Math.random() * (h * 0.5);
+        const sr = Math.random() * 1.5;
+        dCtx.globalAlpha = Math.random() * 0.8 + 0.2;
+        dCtx.beginPath();
+        dCtx.arc(sx, sy, sr, 0, Math.PI * 2);
+        dCtx.fill();
+      }
+      dCtx.globalAlpha = 1.0;
+
+      // Crescent glowing moon
+      dCtx.save();
+      const moonX = w * 0.78;
+      const moonY = h * 0.28;
+      const moonGrad = dCtx.createRadialGradient(moonX, moonY, 10, moonX, moonY, 120);
+      moonGrad.addColorStop(0, 'rgba(255, 240, 200, 0.9)');
+      moonGrad.addColorStop(0.3, 'rgba(255, 200, 150, 0.3)');
+      moonGrad.addColorStop(1, 'rgba(255, 180, 100, 0)');
+      dCtx.fillStyle = moonGrad;
+      dCtx.beginPath();
+      dCtx.arc(moonX, moonY, 120, 0, Math.PI * 2);
+      dCtx.fill();
+      dCtx.restore();
+
+      // Back Mountain Range (Soft Purple mist)
+      dCtx.fillStyle = '#221933';
+      dCtx.beginPath();
+      dCtx.moveTo(0, h * 0.72);
+      for (let x = 0; x <= w; x += 60) {
+        const ny = h * 0.58 + Math.sin(x * 0.003) * 110 + Math.cos(x * 0.008) * 60;
+        dCtx.lineTo(x, ny);
+      }
+      dCtx.lineTo(w, h);
+      dCtx.lineTo(0, h);
+      dCtx.closePath();
+      dCtx.fill();
+
+      // Midground Mountain Range (Moody Indigo)
+      dCtx.fillStyle = '#141124';
+      dCtx.beginPath();
+      dCtx.moveTo(0, h * 0.8);
+      for (let x = 0; x <= w; x += 40) {
+        const ny = h * 0.68 + Math.sin(x * 0.005 + 2) * 90 + Math.cos(x * 0.012) * 50;
+        dCtx.lineTo(x, ny);
+      }
+      dCtx.lineTo(w, h);
+      dCtx.lineTo(0, h);
+      dCtx.closePath();
+      dCtx.fill();
+
+      // Foreground Desert Plain & Lone Highway
+      dCtx.fillStyle = '#080811';
+      dCtx.beginPath();
+      dCtx.moveTo(0, h * 0.82);
+      dCtx.lineTo(w, h * 0.82);
+      dCtx.lineTo(w, h);
+      dCtx.lineTo(0, h);
+      dCtx.closePath();
+      dCtx.fill();
+
+      // Perspective highway road
+      dCtx.fillStyle = '#0f1118';
+      dCtx.beginPath();
+      dCtx.moveTo(w * 0.48, h * 0.82);
+      dCtx.lineTo(w * 0.52, h * 0.82);
+      dCtx.lineTo(w * 0.75, h);
+      dCtx.lineTo(w * 0.25, h);
+      dCtx.closePath();
+      dCtx.fill();
+
+      // Highway dashes
+      dCtx.strokeStyle = '#d99432';
+      dCtx.lineWidth = 4;
+      dCtx.setLineDash([25, 30]);
+      dCtx.beginPath();
+      dCtx.moveTo(w * 0.5, h * 0.82);
+      dCtx.lineTo(w * 0.5, h);
+      dCtx.stroke();
+      dCtx.setLineDash([]);
+
+      // Cinematic Anamorphic Horizontal Blue Streak Flare
+      const flareY = h * 0.78;
+      const flareGrad = dCtx.createLinearGradient(0, flareY, w, flareY);
+      flareGrad.addColorStop(0, 'rgba(0, 180, 255, 0)');
+      flareGrad.addColorStop(0.35, 'rgba(0, 180, 255, 0.15)');
+      flareGrad.addColorStop(0.5, 'rgba(210, 245, 255, 0.8)');
+      flareGrad.addColorStop(0.65, 'rgba(0, 180, 255, 0.15)');
+      flareGrad.addColorStop(1, 'rgba(0, 180, 255, 0)');
+      
+      dCtx.save();
+      dCtx.globalCompositeOperation = 'screen';
+      dCtx.fillStyle = flareGrad;
+      dCtx.fillRect(0, flareY - 3, w, 6);
+
+      // Flare core glow
+      const coreGrad = dCtx.createRadialGradient(w * 0.5, flareY, 2, w * 0.5, flareY, 180);
+      coreGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+      coreGrad.addColorStop(0.2, 'rgba(100, 210, 255, 0.5)');
+      coreGrad.addColorStop(1, 'rgba(0, 120, 255, 0)');
+      dCtx.fillStyle = coreGrad;
+      dCtx.beginPath();
+      dCtx.arc(w * 0.5, flareY, 180, 0, Math.PI * 2);
+      dCtx.fill();
+      dCtx.restore();
+
+      const img = new Image();
+      img.onload = () => {
+        loadImageObject(img);
+        showToast('Загружен кинематографический кадр 2.5K');
+      };
+      img.src = demoCanvas.toDataURL('image/jpeg', 0.96);
+    }
+
+    function loadImageObject(img) {
+      state.image = img;
+      state.isImageLoaded = true;
+      state.originalWidth = img.naturalWidth || img.width;
+      state.originalHeight = img.naturalHeight || img.height;
+
+      // Update UI readouts
+      document.getElementById('overlaySrcRes').textContent = `${state.originalWidth} × ${state.originalHeight} px`;
+      
+      // Auto-fit to aperture
+      resetTransformState();
+      resizeCanvas();
+      render();
+    }
+
+    function resetTransformState() {
+      state.panX = 0;
+      state.panY = 0;
+      state.rotation = 0;
+      state.zoom = 1.0;
+      state.flipH = 1;
+      state.flipV = 1;
+      updateTransformInputsUI();
+    }
+
+    function updateTransformInputsUI() {
+      document.getElementById('inputRotate').value = state.rotation;
+      document.getElementById('valRotate').textContent = `${state.rotation.toFixed(1)}°`;
+      document.getElementById('inputZoom').value = state.zoom;
+      document.getElementById('valZoom').textContent = `${state.zoom.toFixed(2)}×`;
+      document.getElementById('labelZoomVal').textContent = `${Math.round(state.zoom * 100)}%`;
+    }
+
+    function getApertureRect(canvasW, canvasH, targetRatio) {
+      const margin = 32;
+      const availW = Math.max(100, canvasW - margin * 2);
+      const availH = Math.max(100, canvasH - margin * 2);
+
+      let rectW, rectH;
+      if (availW / availH > targetRatio) {
+        rectH = availH;
+        rectW = rectH * targetRatio;
+      } else {
+        rectW = availW;
+        rectH = rectW / targetRatio;
+      }
+
+      const rectX = (canvasW - rectW) / 2;
+      const rectY = (canvasH - rectH) / 2;
+      return { x: rectX, y: rectY, w: rectW, h: rectH };
+    }
+
+    function render() {
+      if (!state.isImageLoaded || !state.image) return;
+
+      const cw = canvas.width;
+      const ch = canvas.height;
+      ctx.clearRect(0, 0, cw, ch);
+
+      const ap = getApertureRect(cw, ch, state.aspectRatio);
+
+      // Update resolution tags
+      const currentCropW = Math.round(state.originalHeight * state.aspectRatio);
+      const currentCropH = state.originalHeight;
+      const displayFramedRes = `${Math.min(state.originalWidth, currentCropW)} × ${currentCropH}`;
+      document.getElementById('headerResolution').textContent = displayFramedRes;
+      document.getElementById('overlayFramedRes').textContent = `${displayFramedRes} px`;
+
+      // 1. Draw transformed image in full viewport (under matte)
+      ctx.save();
+      
+      // Apply filters if not comparing
+      if (!state.compareOriginal) {
+        applyColorGradeFilter(ctx);
+      }
+
+      // Transform context centered on aperture
+      const centerX = ap.x + ap.w / 2;
+      const centerY = ap.y + ap.h / 2;
+
+      ctx.translate(centerX + state.panX, centerY + state.panY);
+      ctx.rotate((state.rotation * Math.PI) / 180);
+      ctx.scale(state.zoom * state.flipH, state.zoom * state.flipV);
+
+      // Base scaling to fit image inside aperture comfortably
+      const imgScale = Math.max(ap.w / state.image.width, ap.h / state.image.height);
+      const drawW = state.image.width * imgScale;
+      const drawH = state.image.height * imgScale;
+
+      ctx.drawImage(state.image, -drawW / 2, -drawH / 2, drawW, drawH);
+      ctx.restore();
+
+      // 2. Apply Film Grain inside aperture
+      if (state.grain > 0 && !state.compareOriginal) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(ap.x, ap.y, ap.w, ap.h);
+        ctx.clip();
+        
+        ctx.globalCompositeOperation = 'overlay';
+        ctx.globalAlpha = (state.grain / 100) * 0.65;
+        const pattern = ctx.createPattern(grainNoiseCanvas, 'repeat');
+        ctx.fillStyle = pattern;
+        ctx.fillRect(ap.x, ap.y, ap.w, ap.h);
+        ctx.restore();
+      }
+
+      // 3. Apply Vignette inside aperture
+      if (state.vignette > 0 && !state.compareOriginal) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(ap.x, ap.y, ap.w, ap.h);
+        ctx.clip();
+
+        const vCenterX = ap.x + ap.w / 2;
+        const vCenterY = ap.y + ap.h / 2;
+        const maxRadius = Math.sqrt(Math.pow(ap.w / 2, 2) + Math.pow(ap.h / 2, 2));
+
+        const vigGrad = ctx.createRadialGradient(vCenterX, vCenterY, maxRadius * 0.4, vCenterX, vCenterY, maxRadius);
+        const vigAlpha = (state.vignette / 100) * 0.85;
+        vigGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        vigGrad.addColorStop(1, `rgba(0, 0, 0, ${vigAlpha})`);
+
+        ctx.fillStyle = vigGrad;
+        ctx.fillRect(ap.x, ap.y, ap.w, ap.h);
+        ctx.restore();
+      }
+
+      // 4. Draw Director Matte (Letterbox overlay darkening outside aperture)
+      ctx.save();
+      ctx.fillStyle = `rgba(10, 12, 16, ${state.matteOpacity})`;
+      // Top bar
+      ctx.fillRect(0, 0, cw, ap.y);
+      // Bottom bar
+      ctx.fillRect(0, ap.y + ap.h, cw, ch - (ap.y + ap.h));
+      // Left bar
+      ctx.fillRect(0, ap.y, ap.x, ap.h);
+      // Right bar
+      ctx.fillRect(ap.x + ap.w, ap.y, cw - (ap.x + ap.w), ap.h);
+      ctx.restore();
+
+      // 5. Draw Composition Grid Guides inside aperture
+      if (state.activeGrid !== 'none') {
+        renderCompositionGrid(ctx, ap);
+      }
+
+      // 6. Draw Frameline Border & Corner Marks
+      renderFramelines(ctx, ap);
+
+      // 7. Draw Subtitles if active
+      if (state.showSubtitles && state.subtitleText.trim().length > 0) {
+        renderSubtitles(ctx, ap);
+      }
+
+      // 8. Draw Camera HUD overlay if active
+      if (state.showCameraHUD) {
+        renderCameraHUD(ctx, ap);
+      }
+    }
+
+    function applyColorGradeFilter(targetCtx) {
+      let b = 100 + Number(state.exposure);
+      let c = 100 + Number(state.contrast);
+      let s = 100 + Number(state.saturation);
+      let hue = 0;
+      let sepia = 0;
+
+      // Apply LUT Preset modifiers
+      switch (state.preset) {
+        case 'teal-orange':
+          c += 15;
+          s += 20;
+          break;
+        case 'kodak':
+          b += 4;
+          c += 8;
+          sepia = 18;
+          break;
+        case 'noir':
+          s = 0;
+          c += 35;
+          b -= 5;
+          break;
+        case 'cyber':
+          c += 20;
+          s += 30;
+          hue = -15;
+          break;
+        case 'bleach':
+          c += 40;
+          s = Math.max(20, s * 0.4);
+          b -= 8;
+          break;
+      }
+
+      // Color temperature emulation
+      if (state.temperature !== 0) {
+        hue += state.temperature * 0.3;
+      }
+
+      targetCtx.filter = `brightness(${Math.max(10, b)}%) contrast(${Math.max(20, c)}%) saturate(${Math.max(0, s)}%) hue-rotate(${hue}deg) sepia(${sepia}%)`;
+    }
+
+    function renderCompositionGrid(gCtx, ap) {
+      gCtx.save();
+      const op = state.guideOpacity;
+      gCtx.strokeStyle = `rgba(251, 191, 36, ${op * 0.6})`;
+      gCtx.lineWidth = 1;
+      gCtx.setLineDash([4, 4]);
+
+      if (state.activeGrid === 'thirds') {
+        const x1 = ap.x + ap.w / 3;
+        const x2 = ap.x + (ap.w * 2) / 3;
+        const y1 = ap.y + ap.h / 3;
+        const y2 = ap.y + (ap.h * 2) / 3;
+
+        gCtx.beginPath();
+        gCtx.moveTo(x1, ap.y); gCtx.lineTo(x1, ap.y + ap.h);
+        gCtx.moveTo(x2, ap.y); gCtx.lineTo(x2, ap.y + ap.h);
+        gCtx.moveTo(ap.x, y1); gCtx.lineTo(ap.x + ap.w, y1);
+        gCtx.moveTo(ap.x, y2); gCtx.lineTo(ap.x + ap.w, y2);
+        gCtx.stroke();
+
+        // Target intersection dots
+        gCtx.setLineDash([]);
+        gCtx.fillStyle = `rgba(251, 191, 36, ${op * 0.9})`;
+        const dots = [[x1, y1], [x1, y2], [x2, y1], [x2, y2]];
+        dots.forEach(([dx, dy]) => {
+          gCtx.beginPath();
+          gCtx.arc(dx, dy, 3, 0, Math.PI * 2);
+          gCtx.fill();
+        });
+      } 
+      else if (state.activeGrid === 'golden') {
+        const phi = 0.61803398875;
+        const x1 = ap.x + ap.w * (1 - phi);
+        const x2 = ap.x + ap.w * phi;
+        const y1 = ap.y + ap.h * (1 - phi);
+        const y2 = ap.y + ap.h * phi;
+
+        gCtx.beginPath();
+        gCtx.moveTo(x1, ap.y); gCtx.lineTo(x1, ap.y + ap.h);
+        gCtx.moveTo(x2, ap.y); gCtx.lineTo(x2, ap.y + ap.h);
+        gCtx.moveTo(ap.x, y1); gCtx.lineTo(ap.x + ap.w, y1);
+        gCtx.moveTo(ap.x, y2); gCtx.lineTo(ap.x + ap.w, y2);
+        gCtx.stroke();
+      }
+      else if (state.activeGrid === 'crosshair') {
+        const cx = ap.x + ap.w / 2;
+        const cy = ap.y + ap.h / 2;
+        gCtx.beginPath();
+        gCtx.moveTo(cx, ap.y); gCtx.lineTo(cx, ap.y + ap.h);
+        gCtx.moveTo(ap.x, cy); gCtx.lineTo(ap.x + ap.w, cy);
+        gCtx.stroke();
+
+        // Center reticle
+        gCtx.setLineDash([]);
+        gCtx.beginPath();
+        gCtx.arc(cx, cy, 18, 0, Math.PI * 2);
+        gCtx.stroke();
+      }
+      else if (state.activeGrid === 'safe') {
+        // 90% Action Safe
+        const aW = ap.w * 0.9;
+        const aH = ap.h * 0.9;
+        const aX = ap.x + (ap.w - aW) / 2;
+        const aY = ap.y + (ap.h - aH) / 2;
+        gCtx.strokeRect(aX, aY, aW, aH);
+
+        // 80% Title Safe
+        gCtx.strokeStyle = `rgba(6, 182, 212, ${op * 0.6})`;
+        const tW = ap.w * 0.8;
+        const tH = ap.h * 0.8;
+        const tX = ap.x + (ap.w - tW) / 2;
+        const tY = ap.y + (ap.h - tH) / 2;
+        gCtx.strokeRect(tX, tY, tW, tH);
+      }
+
+      gCtx.restore();
+    }
+
+    function renderFramelines(gCtx, ap) {
+      gCtx.save();
+      const op = state.guideOpacity;
+      gCtx.strokeStyle = `rgba(255, 255, 255, ${op * 0.7})`;
+      gCtx.lineWidth = 1;
+      gCtx.strokeRect(ap.x, ap.y, ap.w, ap.h);
+
+      if (state.cornerMarks) {
+        const cLen = Math.min(24, ap.w * 0.08);
+        gCtx.strokeStyle = `rgba(251, 191, 36, ${Math.min(1, op + 0.2)})`;
+        gCtx.lineWidth = 2.5;
+
+        // Top Left
+        gCtx.beginPath();
+        gCtx.moveTo(ap.x, ap.y + cLen); gCtx.lineTo(ap.x, ap.y); gCtx.lineTo(ap.x + cLen, ap.y);
+        gCtx.stroke();
+
+        // Top Right
+        gCtx.beginPath();
+        gCtx.moveTo(ap.x + ap.w - cLen, ap.y); gCtx.lineTo(ap.x + ap.w, ap.y); gCtx.lineTo(ap.x + ap.w, ap.y + cLen);
+        gCtx.stroke();
+
+        // Bottom Left
+        gCtx.beginPath();
+        gCtx.moveTo(ap.x, ap.y + ap.h - cLen); gCtx.lineTo(ap.x, ap.y + ap.h); gCtx.lineTo(ap.x + cLen, ap.y + ap.h);
+        gCtx.stroke();
+
+        // Bottom Right
+        gCtx.beginPath();
+        gCtx.moveTo(ap.x + ap.w - cLen, ap.y + ap.h); gCtx.lineTo(ap.x + ap.w, ap.y + ap.h); gCtx.lineTo(ap.x + ap.w, ap.y + ap.h - cLen);
+        gCtx.stroke();
+      }
+      gCtx.restore();
+    }
+
+    function renderSubtitles(gCtx, ap) {
+      gCtx.save();
+      const fontSize = state.subSize === 'small' ? Math.max(14, ap.h * 0.045) : (state.subSize === 'large' ? Math.max(20, ap.h * 0.075) : Math.max(16, ap.h * 0.055));
+      gCtx.font = `600 ${fontSize}px "Inter", sans-serif`;
+      gCtx.textAlign = 'center';
+      gCtx.textBaseline = 'middle';
+
+      let textColor = '#ffffff';
+      if (state.subColor === 'yellow') textColor = '#ffea31';
+      else if (state.subColor === 'cyan') textColor = '#67e8f9';
+
+      const posX = ap.x + ap.w / 2;
+      const posY = ap.y + ap.h - fontSize * 1.8;
+
+      // Soft cinematic drop shadow and subtle outline
+      gCtx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+      gCtx.shadowBlur = 8;
+      gCtx.shadowOffsetX = 0;
+      gCtx.shadowOffsetY = 2;
+
+      gCtx.strokeStyle = 'rgba(0, 0, 0, 0.9)';
+      gCtx.lineWidth = Math.max(2, fontSize * 0.12);
+      gCtx.strokeText(state.subtitleText, posX, posY);
+
+      gCtx.fillStyle = textColor;
+      gCtx.fillText(state.subtitleText, posX, posY);
+
+      gCtx.restore();
+    }
+
+    function renderCameraHUD(gCtx, ap) {
+      gCtx.save();
+      const fontSize = Math.max(10, ap.h * 0.032);
+      gCtx.font = `500 ${fontSize}px "JetBrains Mono", monospace`;
+      gCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      const pad = 12;
+
+      // Top Left: REC & FPS
+      gCtx.fillStyle = '#ef4444';
+      gCtx.fillText('● REC', ap.x + pad, ap.y + pad + fontSize);
+      gCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+      gCtx.fillText(`  ${state.hudFps}`, ap.x + pad + fontSize * 3.5, ap.y + pad + fontSize);
+
+      // Top Right: Shutter & White Balance
+      gCtx.textAlign = 'right';
+      gCtx.fillText('SHUTTER 180° • ISO 800', ap.x + ap.w - pad, ap.y + pad + fontSize);
+
+      // Bottom Left: Lens info & Ratio
+      gCtx.textAlign = 'left';
+      gCtx.fillText(`${state.hudLens} • RAW`, ap.x + pad, ap.y + ap.h - pad);
+
+      // Bottom Right: Format info
+      gCtx.textAlign = 'right';
+      gCtx.fillText(`${state.ratioName}`, ap.x + ap.w - pad, ap.y + ap.h - pad);
+
+      gCtx.restore();
+    }
+
+    function resizeCanvas() {
+      const rect = canvasViewport.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      render();
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    canvas.addEventListener('mousedown', (e) => {
+      state.isDragging = true;
+      state.startX = e.clientX - state.panX;
+      state.startY = e.clientY - state.panY;
+      canvas.style.cursor = 'grabbing';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!state.isDragging) return;
+      state.panX = e.clientX - state.startX;
+      state.panY = e.clientY - state.startY;
+      render();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (state.isDragging) {
+        state.isDragging = false;
+        canvas.style.cursor = 'grab';
+      }
+    });
+
+    // Zoom via mouse wheel
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.06 : 0.94;
+      const newZoom = Math.min(3.5, Math.max(0.4, state.zoom * zoomFactor));
+      state.zoom = newZoom;
+      updateTransformInputsUI();
+      render();
+    }, { passive: false });
+
+    // Touch support (Drag & Pinch)
+    let initialPinchDist = null;
+    let initialPinchZoom = 1.0;
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        state.isDragging = true;
+        state.startX = e.touches[0].clientX - state.panX;
+        state.startY = e.touches[0].clientY - state.panY;
+      } else if (e.touches.length === 2) {
+        state.isDragging = false;
+        initialPinchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialPinchZoom = state.zoom;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (e.touches.length === 1 && state.isDragging) {
+        state.panX = e.touches[0].clientX - state.startX;
+        state.panY = e.touches[0].clientY - state.startY;
+        render();
+      } else if (e.touches.length === 2 && initialPinchDist) {
+        const currentDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const factor = currentDist / initialPinchDist;
+        state.zoom = Math.min(3.5, Math.max(0.4, initialPinchZoom * factor));
+        updateTransformInputsUI();
+        render();
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', () => {
+      state.isDragging = false;
+      initialPinchDist = null;
+    });
+
+    document.getElementById('btnZoomIn').addEventListener('click', () => {
+      state.zoom = Math.min(3.5, state.zoom + 0.15);
+      updateTransformInputsUI();
+      render();
+    });
+
+    document.getElementById('btnZoomOut').addEventListener('click', () => {
+      state.zoom = Math.max(0.4, state.zoom - 0.15);
+      updateTransformInputsUI();
+      render();
+    });
+
+    document.getElementById('btnFit').addEventListener('click', () => {
+      state.panX = 0;
+      state.panY = 0;
+      state.zoom = 1.0;
+      updateTransformInputsUI();
+      render();
+      showToast('Изображение вписано в кадр');
+    });
+
+    document.getElementById('btnFill').addEventListener('click', () => {
+      state.panX = 0;
+      state.panY = 0;
+      state.zoom = 1.35;
+      updateTransformInputsUI();
+      render();
+      showToast('Изображение заполнило кадр');
+    });
+
+    // Before/After comparison toggle button
+    const btnCompare = document.getElementById('btnCompare');
+    const setCompare = (active) => {
+      state.compareOriginal = active;
+      render();
+    };
+    btnCompare.addEventListener('mousedown', () => setCompare(true));
+    window.addEventListener('mouseup', () => { if (state.compareOriginal) setCompare(false); });
+    btnCompare.addEventListener('touchstart', () => setCompare(true), { passive: true });
+    btnCompare.addEventListener('touchend', () => setCompare(false));
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('active', 'text-amber-400', 'bg-cinema-850', 'border', 'border-cinema-700/50');
+          b.classList.add('text-gray-400');
+        });
+        btn.classList.add('active', 'text-amber-400', 'bg-cinema-850', 'border', 'border-cinema-700/50');
+        btn.classList.remove('text-gray-400');
+
+        const tabId = btn.getAttribute('data-tab');
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+        document.getElementById(tabId).classList.remove('hidden');
+      });
+    });
+
+    // Ratio grid selection
+    document.querySelectorAll('.ratio-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.ratio-btn').forEach(b => {
+          b.classList.remove('active', 'border-amber-500/80');
+          b.classList.add('border-cinema-700/60');
+        });
+        btn.classList.add('active', 'border-amber-500/80');
+        btn.classList.remove('border-cinema-700/60');
+
+        state.aspectRatio = parseFloat(btn.getAttribute('data-ratio'));
+        state.ratioName = btn.getAttribute('data-name');
+        
+        document.getElementById('currentRatioBadge').textContent = `${state.aspectRatio}:1`;
+        document.getElementById('headerRatioName').textContent = state.ratioName;
+        document.getElementById('overlayCropRatio').textContent = state.ratioName;
+
+        render();
+        showToast(`Формат изменен: ${state.ratioName}`);
+      });
+    });
+
+    // Transforms & Sliders
+    document.getElementById('inputRotate').addEventListener('input', (e) => {
+      state.rotation = parseFloat(e.target.value);
+      document.getElementById('valRotate').textContent = `${state.rotation.toFixed(1)}°`;
+      render();
+    });
+
+    document.getElementById('inputZoom').addEventListener('input', (e) => {
+      state.zoom = parseFloat(e.target.value);
+      document.getElementById('valZoom').textContent = `${state.zoom.toFixed(2)}×`;
+      document.getElementById('labelZoomVal').textContent = `${Math.round(state.zoom * 100)}%`;
+      render();
+    });
+
+    document.getElementById('inputMatte').addEventListener('input', (e) => {
+      state.matteOpacity = parseInt(e.target.value) / 100;
+      document.getElementById('valMatte').textContent = `${e.target.value}%`;
+      render();
+    });
+
+    document.getElementById('btnFlipH').addEventListener('click', () => {
+      state.flipH *= -1;
+      render();
+    });
+
+    document.getElementById('btnFlipV').addEventListener('click', () => {
+      state.flipV *= -1;
+      render();
+    });
+
+    document.getElementById('btnResetTransform').addEventListener('click', () => {
+      resetTransformState();
+      render();
+      showToast('Геометрия сброшена к исходной');
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preset-btn').forEach(b => {
+          b.classList.remove('active', 'border-amber-500/80');
+          b.classList.add('border-cinema-700/60');
+        });
+        btn.classList.add('active', 'border-amber-500/80');
+        btn.classList.remove('border-cinema-700/60');
+
+        state.preset = btn.getAttribute('data-preset');
+        render();
+        showToast(`Применен кино-лук: ${btn.querySelector('.text-xs').textContent}`);
+      });
+    });
+
+    const bindSlider = (id, valId, stateKey, suffix = '') => {
+      document.getElementById(id).addEventListener('input', (e) => {
+        state[stateKey] = parseFloat(e.target.value);
+        document.getElementById(valId).textContent = `${state[stateKey]}${suffix}`;
+        render();
+      });
+    };
+
+    bindSlider('inputExposure', 'valExposure', 'exposure');
+    bindSlider('inputContrast', 'valContrast', 'contrast');
+    bindSlider('inputSaturation', 'valSaturation', 'saturation');
+    bindSlider('inputTemp', 'valTemp', 'temperature');
+    bindSlider('inputGrain', 'valGrain', 'grain', '%');
+    bindSlider('inputVignette', 'valVignette', 'vignette', '%');
+
+    document.getElementById('btnResetGrade').addEventListener('click', () => {
+      state.preset = 'none';
+      state.exposure = 0;
+      state.contrast = 0;
+      state.saturation = 0;
+      state.temperature = 0;
+      state.grain = 0;
+      state.vignette = 20;
+
+      document.getElementById('inputExposure').value = 0;
+      document.getElementById('valExposure').textContent = '0';
+      document.getElementById('inputContrast').value = 0;
+      document.getElementById('valContrast').textContent = '0';
+      document.getElementById('inputSaturation').value = 0;
+      document.getElementById('valSaturation').textContent = '0';
+      document.getElementById('inputTemp').value = 0;
+      document.getElementById('valTemp').textContent = '0';
+      document.getElementById('inputGrain').value = 0;
+      document.getElementById('valGrain').textContent = '0%';
+      document.getElementById('inputVignette').value = 20;
+      document.getElementById('valVignette').textContent = '20%';
+
+      document.querySelectorAll('.preset-btn').forEach(b => {
+        b.classList.remove('active', 'border-amber-500/80');
+        b.classList.add('border-cinema-700/60');
+      });
+      document.querySelector('[data-preset="none"]').classList.add('active', 'border-amber-500/80');
+
+      render();
+      showToast('Цветокоррекция сброшена');
+    });
+
+    document.querySelectorAll('.grid-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.grid-btn').forEach(b => {
+          b.classList.remove('active', 'border-amber-500/80');
+          b.classList.add('border-cinema-700/60');
+        });
+        btn.classList.add('active', 'border-amber-500/80');
+        btn.classList.remove('border-cinema-700/60');
+
+        state.activeGrid = btn.getAttribute('data-grid');
+        render();
+      });
+    });
+
+    document.getElementById('inputGuideOpacity').addEventListener('input', (e) => {
+      state.guideOpacity = parseInt(e.target.value) / 100;
+      document.getElementById('valGuideOpacity').textContent = `${e.target.value}%`;
+      render();
+    });
+
+    document.getElementById('checkCornerMarks').addEventListener('change', (e) => {
+      state.cornerMarks = e.target.checked;
+      render();
+    });
+
+    // Subtitles
+    const checkSubtitles = document.getElementById('checkSubtitles');
+    const subtitlesControls = document.getElementById('subtitlesControls');
+    checkSubtitles.addEventListener('change', (e) => {
+      state.showSubtitles = e.target.checked;
+      if (state.showSubtitles) {
+        subtitlesControls.classList.remove('opacity-50', 'pointer-events-none');
+      } else {
+        subtitlesControls.classList.add('opacity-50', 'pointer-events-none');
+      }
+      render();
+    });
+
+    document.getElementById('inputSubtitleText').addEventListener('input', (e) => {
+      state.subtitleText = e.target.value;
+      render();
+    });
+
+    document.getElementById('selectSubColor').addEventListener('change', (e) => {
+      state.subColor = e.target.value;
+      render();
+    });
+
+    document.getElementById('selectSubSize').addEventListener('change', (e) => {
+      state.subSize = e.target.value;
+      render();
+    });
+
+    // Camera HUD
+    const checkCameraHUD = document.getElementById('checkCameraHUD');
+    const hudControls = document.getElementById('hudControls');
+    checkCameraHUD.addEventListener('change', (e) => {
+      state.showCameraHUD = e.target.checked;
+      if (state.showCameraHUD) {
+        hudControls.classList.remove('opacity-50', 'pointer-events-none');
+      } else {
+        hudControls.classList.add('opacity-50', 'pointer-events-none');
+      }
+      render();
+    });
+
+    document.getElementById('hudFps').addEventListener('input', (e) => {
+      state.hudFps = e.target.value;
+      render();
+    });
+
+    document.getElementById('hudLens').addEventListener('input', (e) => {
+      state.hudLens = e.target.value;
+      render();
+    });
+
+    // Letterbox Export Mode Radio
+    document.querySelectorAll('input[name="exportMatteMode"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        state.exportMatteMode = e.target.value;
+      });
+    });
+
+    imageUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleImageFile(file);
+    });
+
+    function handleImageFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Пожалуйста, выберите файл изображения', true);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          loadImageObject(img);
+          showToast(`Изображение загружено: ${file.name}`);
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Drag & drop on window
+    ['dragenter', 'dragover'].forEach(name => {
+      window.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropOverlay.classList.remove('hidden');
+        dropOverlay.classList.add('flex');
+      });
+    });
+
+    ['dragleave', 'drop'].forEach(name => {
+      dropOverlay.addEventListener(name, (e) => {
+        e.preventDefault();
+        dropOverlay.classList.add('hidden');
+        dropOverlay.classList.remove('flex');
+      });
+    });
+
+    window.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropOverlay.classList.add('hidden');
+      dropOverlay.classList.remove('flex');
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleImageFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    document.getElementById('btnSample').addEventListener('click', () => {
+      generateCinematicDemoImage();
+    });
+
+    const exportModal = document.getElementById('exportModal');
+    document.getElementById('btnExportModal').addEventListener('click', () => {
+      if (!state.isImageLoaded) {
+        showToast('Сначала загрузите изображение', true);
+        return;
+      }
+
+      // Calculate target export resolution
+      const outRes = calculateExportDimensions();
+      document.getElementById('modalExportRes').textContent = `${outRes.width} × ${outRes.height} px`;
+      document.getElementById('modalExportRatio').textContent = state.ratioName;
+      document.getElementById('modalExportMatte').textContent = state.exportMatteMode === 'pure' ? 'Чистый кроп' : 'Каше на 16:9';
+
+      exportModal.classList.remove('hidden');
+      exportModal.classList.add('flex');
+    });
+
+    document.getElementById('btnCloseExportModal').addEventListener('click', () => exportModal.classList.add('hidden'));
+    document.getElementById('btnCancelExport').addEventListener('click', () => exportModal.classList.add('hidden'));
+
+    // Format selection in modal
+    document.querySelectorAll('.export-format-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.export-format-btn').forEach(b => {
+          b.classList.remove('active', 'border-amber-500', 'text-amber-400', 'font-bold');
+          b.classList.add('border-cinema-700', 'text-gray-300');
+        });
+        btn.classList.add('active', 'border-amber-500', 'text-amber-400', 'font-bold');
+        btn.classList.remove('border-cinema-700', 'text-gray-300');
+
+        state.exportFormat = btn.getAttribute('data-format');
+        document.getElementById('qualityControlGroup').style.display = state.exportFormat === 'image/jpeg' ? 'block' : 'none';
+      });
+    });
+
+    document.getElementById('inputJpegQuality').addEventListener('input', (e) => {
+      state.exportQuality = parseInt(e.target.value) / 100;
+      document.getElementById('valJpegQuality').textContent = `${e.target.value}%`;
+    });
+
+    function calculateExportDimensions() {
+      const srcW = state.originalWidth;
+      const srcH = state.originalHeight;
+
+      if (state.exportMatteMode === 'pure') {
+        // Exact cinematic crop dimensions preserving maximum source resolution
+        let targetW, targetH;
+        if (srcW / srcH > state.aspectRatio) {
+          targetH = srcH;
+          targetW = Math.round(targetH * state.aspectRatio);
+        } else {
+          targetW = srcW;
+          targetH = Math.round(targetW / state.aspectRatio);
+        }
+        return { width: targetW, height: targetH };
+      } else {
+        // 16:9 Letterbox Matte mode (Broadcast ready)
+        let frameW = Math.max(1920, srcW);
+        let frameH = Math.round(frameW / (16 / 9));
+        return { width: frameW, height: frameH };
+      }
+    }
+
+    document.getElementById('btnPerformExport').addEventListener('click', () => {
+      exportModal.classList.add('hidden');
+      performFullResExport();
+    });
+
+    function performFullResExport() {
+      showToast('Рендеринг в максимальном разрешении...');
+
+      setTimeout(() => {
+        try {
+          const dims = calculateExportDimensions();
+          const expCanvas = document.createElement('canvas');
+          expCanvas.width = dims.width;
+          expCanvas.height = dims.height;
+          const eCtx = expCanvas.getContext('2d');
+
+          // Black background for letterbox if in 16:9 mode
+          eCtx.fillStyle = '#000000';
+          eCtx.fillRect(0, 0, dims.width, dims.height);
+
+          // Calculate destination aperture rectangle in master canvas
+          let destAp;
+          if (state.exportMatteMode === 'pure') {
+            destAp = { x: 0, y: 0, w: dims.width, h: dims.height };
+          } else {
+            // Center aperture within 16:9 master frame
+            const barH = dims.width / state.aspectRatio;
+            const barY = (dims.height - barH) / 2;
+            destAp = { x: 0, y: barY, w: dims.width, h: barH };
+          }
+
+          // Ratio scale from preview aperture to master export aperture
+          const previewAp = getApertureRect(canvas.width, canvas.height, state.aspectRatio);
+          const masterScale = destAp.w / previewAp.w;
+
+          // Render Master Transformed Image
+          eCtx.save();
+          eCtx.beginPath();
+          eCtx.rect(destAp.x, destAp.y, destAp.w, destAp.h);
+          eCtx.clip();
+
+          applyColorGradeFilter(eCtx);
+
+          const centerX = destAp.x + destAp.w / 2;
+          const centerY = destAp.y + destAp.h / 2;
+
+          eCtx.translate(centerX + (state.panX * masterScale), centerY + (state.panY * masterScale));
+          eCtx.rotate((state.rotation * Math.PI) / 180);
+          eCtx.scale(state.zoom * state.flipH, state.zoom * state.flipV);
+
+          const imgScale = Math.max(destAp.w / state.image.width, destAp.h / state.image.height);
+          const drawW = state.image.width * imgScale;
+          const drawH = state.image.height * imgScale;
+
+          eCtx.drawImage(state.image, -drawW / 2, -drawH / 2, drawW, drawH);
+          eCtx.restore();
+
+          // Apply Film Grain to Master
+          if (state.grain > 0) {
+            eCtx.save();
+            eCtx.beginPath();
+            eCtx.rect(destAp.x, destAp.y, destAp.w, destAp.h);
+            eCtx.clip();
+            eCtx.globalCompositeOperation = 'overlay';
+            eCtx.globalAlpha = (state.grain / 100) * 0.65;
+            const pattern = eCtx.createPattern(grainNoiseCanvas, 'repeat');
+            eCtx.fillStyle = pattern;
+            eCtx.fillRect(destAp.x, destAp.y, destAp.w, destAp.h);
+            eCtx.restore();
+          }
+
+          // Apply Vignette to Master
+          if (state.vignette > 0) {
+            eCtx.save();
+            eCtx.beginPath();
+            eCtx.rect(destAp.x, destAp.y, destAp.w, destAp.h);
+            eCtx.clip();
+            const vCenterX = destAp.x + destAp.w / 2;
+            const vCenterY = destAp.y + destAp.h / 2;
+            const maxRadius = Math.sqrt(Math.pow(destAp.w / 2, 2) + Math.pow(destAp.h / 2, 2));
+
+            const vigGrad = eCtx.createRadialGradient(vCenterX, vCenterY, maxRadius * 0.4, vCenterX, vCenterY, maxRadius);
+            const vigAlpha = (state.vignette / 100) * 0.85;
+            vigGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            vigGrad.addColorStop(1, `rgba(0, 0, 0, ${vigAlpha})`);
+
+            eCtx.fillStyle = vigGrad;
+            eCtx.fillRect(destAp.x, destAp.y, destAp.w, destAp.h);
+            eCtx.restore();
+          }
+
+          // Subtitles on Master
+          if (state.showSubtitles && state.subtitleText.trim().length > 0) {
+            renderSubtitles(eCtx, destAp);
+          }
+
+          // Camera HUD on Master
+          if (state.showCameraHUD) {
+            renderCameraHUD(eCtx, destAp);
+          }
+
+          // Trigger File Download
+          const fileExt = state.exportFormat === 'image/png' ? 'png' : 'jpg';
+          const filename = `CineFrame_${state.ratioName.replace(/[^a-zA-Z0-9]/g, '_')}_${dims.width}x${dims.height}.${fileExt}`;
+
+          expCanvas.toBlob((blob) => {
+            if (!blob) {
+              showToast('Ошибка при формировании файла', true);
+              return;
+            }
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Кадр сохранен (${dims.width}×${dims.height})`);
+          }, state.exportFormat, state.exportQuality);
+
+        } catch (err) {
+          console.error('Export Error:', err);
+          showToast('Не удалось экспортировать изображение', true);
+        }
+      }, 50);
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.textContent = message;
+      if (isError) {
+        toastIcon.className = 'w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0';
+      } else {
+        toastIcon.className = 'w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0';
+      }
+
+      toast.classList.remove('translate-y-12', 'opacity-0', 'pointer-events-none');
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-12', 'opacity-0', 'pointer-events-none');
+      }, 3200);
+    }
+
+    // Master Reset Button
+    document.getElementById('btnResetAll').addEventListener('click', () => {
+      resetTransformState();
+      document.getElementById('btnResetGrade').click();
+      showToast('Все параметры возвращены к исходным');
+    });
+
+    // Keyboard Hotkeys
+    window.addEventListener('keydown', (e) => {
+      // Don't intercept if user is typing in an input
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+      if (e.key === 'r' || e.key === 'к' || e.key === 'R' || e.key === 'К') {
+        document.getElementById('btnResetAll').click();
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        setCompare(true);
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+      if (e.key === ' ' || e.code === 'Space') {
+        setCompare(false);
+      }
+    });
+
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      // Load initial stunning cinematic shot
+      generateCinematicDemoImage();
+    });
+  </script>
+</body>
+</html>
